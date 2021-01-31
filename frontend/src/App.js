@@ -6,6 +6,8 @@ import {
   Route,
   Link
 } from 'react-router-dom';
+import LobbyPost from './components/LobbyPost';
+import Lobby from './views/Lobby';
 
 function App() {
   return (
@@ -16,7 +18,7 @@ function App() {
             <header className="App-header">
               <img src={logo} className="App-logo" alt="logo" />
               <p>
-                Edit <code>src/App.js</code> and save to reload.
+                <LobbyPost author="Connor Burns" content="This is my post content. It should appear in smaller text below the author"/>
               </p>
               <Link
                 className="App-link"
@@ -29,6 +31,9 @@ function App() {
           <Route path="/test">
             <p>Very poorly styled second page</p>
             <Link to="/">Go back home</Link>
+          </Route>
+          <Route path="/lobby/:id">
+            <Lobby/>
           </Route>
         </Switch>
       </div>
