@@ -1,11 +1,8 @@
 # TSA Software Development Project 2021
-This is our code repository for our software development project.
+This is the repository containing the code for our TSA software development project during the 2020-2021 school year.
 
-## Backend
-This directory contains all the source code for the application backend.
-
-## Frontend
-This directory contains all the source code and assets needed to build the static frontend.
+## Development
+For help on how to begin development on this project, consult [this documentation page](</resources/docs/Starting the Project.md>).
 
 ## Documentation
-As of now no documentation exists, but this is something we will eventually need to do.
+All documentation will be located somewhere under `/resources`. The `/resources/docs` directory contains documentation describing the code, and the `/resources/meetings` directory contains information about important development meetings and scheduling.
