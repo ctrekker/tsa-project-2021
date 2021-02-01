@@ -6,4 +6,6 @@ router.get('/', function(req, res, next) {
   res.send('TSA Software Development Backend v1.0.0');
 });
 
+router.use('/api', require('./api'));
+
 module.exports = router;
