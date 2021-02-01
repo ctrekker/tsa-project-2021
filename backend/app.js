@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-const getDb = require('./db');
+const {getDb} = require('./db');
 
 getDb().then(conn => {
   // console.log(conn);

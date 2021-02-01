@@ -6,8 +6,10 @@ module.exports = {
 };
 module.exports.requireAuth = (req, res, next) => {
     const authToken = req.cookies.auth;
-    if(!authToken || !module.exports.verify(authToken)) {
+    let p;
+    if(!authToken || !(p = module.exports.verify(authToken))) {
         throw new Error('This endpoint requires authentication');
     }
+    req.user = p;
     next();
 };
