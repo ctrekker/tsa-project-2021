@@ -26,8 +26,6 @@ router.post('/', async (req, res) => {
     res.cookie('auth', authToken, {});
     res.json(payload);
 
-    const conn = await getDb();
-
     console.log(payload);
     req.conn.query('SELECT * FROM USER WHERE GID = ?', payload.sub, (err, results) => {
         if(results.length === 0) {
