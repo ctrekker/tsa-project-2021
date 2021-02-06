@@ -1,16 +1,14 @@
 .container {
-  width: 304px;
   display: flex;
   flex-direction: row;
-  margin: 5px;
-  border-radius: 5px;
-  box-shadow: 1px 1px 2px rgb(107, 107, 107);
+  align-items: center;
+  padding: 10px;
 }
 .left, .right{
   border-radius: 5px;
   
   margin: 0px;
-  height:80px;
+  /* padding: 10px;   */
   background-color:#fff;
   text-align: center;
 }
@@ -19,6 +17,7 @@
 }
 .left {
   width: 184px;
+  text-align: left;
 }
 #text {
   margin: 0px;
@@ -41,6 +40,6 @@
 .ttext {
   margin-bottom: 0px;
   margin-top: 15px;
-  
+  font-weight: bold !important;
 
 }

@@ -27,7 +27,7 @@ export default function Lobby({ name, description }) {
     }, [descriptionExpanded, setDescriptionExpanded]);
 
     return (
-        <Container maxWidth="md" style={{marginTop: 20}}>
+        <Container maxWidth="lg" style={{marginTop: 20}}>
             <div style={{position: 'sticky', top: -10, paddingTop: 10, zIndex: 100, background: 'white'}}>
                 <Typography variant="h4">{name}</Typography>
                 <Collapse in={descriptionExpanded}>
@@ -75,9 +75,15 @@ Come and learn about how inductive proofs can prove the convergence of the infin
                     </Grid>
                 </Grid>
                 <Grid item xs="4" style={{borderLeft: '1px solid lightgrey'}}>
-                    <div style={{position: 'sticky', top: 50}}>
-                        <ClassPreview title="Basics of Derivatives" author="Connor Burns" rating={'4.3/5'} date="Feb 8th" time="7:30 AM"/>
-                        <ClassPreview title="Mistakes in Calculus 10th Edition" author="Todd Mortley" rating={'6.28/5'} date="Feb 11th" time="6:00 AM"/>
+                    <div style={{position: 'sticky', top: 50, padding: '10px'}}>
+                        <Grid container spacing={2}>
+                            <Grid item xs="12">
+                                <ClassPreview onClick={() => alert('clicked!')} title="Basics of Derivatives" author="Connor Burns" rating={'4.3/5'} scheduledFor={moment('2/8/2021 7:30')} date="Feb 8th" time="7:30 AM"/>
+                            </Grid>
+                            <Grid item xs="12">
+                                <ClassPreview title="Mistakes in Calculus 10th Edition" author="Todd Mortley" rating={'6.28/5'} scheduledFor={moment('2/11/2021 6:00')} date="Feb 11th" time="6:00 AM"/>
+                            </Grid>
+                        </Grid>
                     </div>
                 </Grid>
             </Grid>

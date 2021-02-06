@@ -7,9 +7,7 @@ import {
 } from 'react-router-dom';
 import Lobby from './views/Lobby';
 import Lobbies from './views/Lobbies';
-import LobbyPost from './components/LobbyPost';
 import Config from './Config';
-import moment from 'moment';
 
 function App() {
   function onSignIn(googleUser) {

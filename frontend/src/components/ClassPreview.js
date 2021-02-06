@@ -1,27 +1,36 @@
+import { Card, CardActionArea, Typography } from '@material-ui/core';
 import React from 'react'
 import './ClassPreview.css';
+import moment from 'moment';
+
 export default function ClassPreview(props) {
     const {
         title,
         author,
         rating,
-        date,
-        time
+        scheduledFor,
+        onClick
     } = props;
 
     return (
-        <div className="container">
+        <Card>
+            <CardActionArea onClick={onClick}>
+                <div className="container">
+                    <div className="left">
+                        <Typography variant="subtitle1" className="ttext" style={{marginTop: 0}}>{title}</Typography>
+                        <Typography variant="p" id="author">by {author} ({rating})</Typography>
+                    </div>
 
-            <div className="left">
-                <h2 className="ttext">{title}</h2>
-                <p id="author">by {author} ({rating})</p>
-            </div>
+                    <div style={{flexGrow: 1}}/>
 
-            <div className="right">
-                <p id="text">Scheduled For:</p>
-                <h3 className="date">{date}</h3>
-                <h3 className="date">{time}</h3>
-            </div>
-        </div>
+                    <div className="right">
+                        <Typography variant="p" id="text">Scheduled For:</Typography>
+                        <h3 className="date">{scheduledFor.format('MMM Do')}</h3>
+                        <h3 className="date">{scheduledFor.format('h:mm A')}</h3>
+                    </div>
+                </div>
+
+            </CardActionArea>
+        </Card>
     );
 }
