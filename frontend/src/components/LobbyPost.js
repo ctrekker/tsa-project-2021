@@ -30,17 +30,17 @@ export default function LobbyPost({ lobbyId, id, author, createdAt, content, rep
     }
 
     return (
-        <Card>
+        <Card style={{marginBottom: 25}}>
             <CardContent>
                 <RouterLink className="userLink" to={`/user/${author.id}`}>
-                    <ProfilePicture url="https://lh3.googleusercontent.com/a-/AOh14GjGp4Umv1QrrFtqqOHUbSbMAulx7XhYJh_Q4esNfA=s96-c"/>
+                    <ProfilePicture url={author.picture || 'https://lh3.googleusercontent.com/a-/AOh14GjGp4Umv1QrrFtqqOHUbSbMAulx7XhYJh_Q4esNfA=s96-c'}/>
                     <div style={{marginLeft: 10}}>
                         <Typography variant="h6">{author.name}</Typography>
                         <Typography variant="body2" color="textSecondary">{createdAt.fromNow()}</Typography>
                     </div>
                 </RouterLink>
                 
-                <Typography variant="body2" component="div">
+                <Typography variant="body2" component="div" style={{textAlign: 'left'}}>
                     <ReactMarkdown style={{display: 'inline'}}>
                         {expandedContent ? content : content.substring(0, maxContentLength)}
                     </ReactMarkdown>
@@ -50,7 +50,7 @@ export default function LobbyPost({ lobbyId, id, author, createdAt, content, rep
                 </Typography>
 
                 {/* CLASS COMPONENT WILL EVENTUALLY BE INSTANTIATED HERE */}
-                {/* <LobbyClass .../> */}
+                {/* <ClassPreview .../> */}
             </CardContent>
             <CardActions style={{display: 'flex', justifyContent: 'flex-end', margin: '0 10px'}}>
                 {replyCount > 0 && <Link href="#" onClick={() => {}}>See {replyCount} replies...</Link>}
