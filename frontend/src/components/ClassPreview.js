@@ -24,9 +24,9 @@ export default function ClassPreview(props) {
                     <div style={{flexGrow: 1}}/>
 
                     <div className="right">
-                        <Typography variant="p" id="text">Scheduled For:</Typography>
-                        <h3 className="date">{scheduledFor.format('MMM Do')}</h3>
-                        <h3 className="date">{scheduledFor.format('h:mm A')}</h3>
+                        <Typography variant="p" id="text" color="textSecondary">Scheduled For:</Typography>
+                        <Typography variant="subtitle2" className="date">{scheduledFor.format('MMM Do')}</Typography>
+                        <Typography variant="subtitle2" className="date">{scheduledFor.format('h:mm A')}</Typography>
                     </div>
                 </div>
 
