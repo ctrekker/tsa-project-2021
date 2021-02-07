@@ -8,6 +8,7 @@ import {
 import Lobby from './views/Lobby';
 import Lobbies from './views/Lobbies';
 import Config from './Config';
+import Landing from './views/Landing';
 
 function App() {
   function onSignIn(googleUser) {
@@ -60,7 +61,9 @@ function App() {
           </Route>
 
           { /* TEST ROUTES */ }
-          
+          <Route path="/landing">
+            <Landing/>
+          </Route>
         </Switch>
       </div>
     </Router>
