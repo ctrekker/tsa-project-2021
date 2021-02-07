@@ -10,7 +10,7 @@ router.use(db);
 router.use('/users', require('./api/user'));
 router.use('/lobbies', require('./api/lobby'));
 router.use('/classes', requireAuth, require('./api/class'));
-router.use('/lobbies/:lobbyId/classes', require('./api/lobbyClass'));
+router.use('/lobbies/:lobbyId/classes', requireAuth, require('./api/lobbyClass'));
 router.use('/lobbies/:lobbyId/posts/', require('./api/post'));
 router.use('/lobbies/:lobbyId/classes/:classId/comments/', require('./api/comment'));
 

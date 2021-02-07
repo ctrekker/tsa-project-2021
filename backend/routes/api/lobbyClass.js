@@ -1,8 +1,21 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
 
-//temp user variable
-const user = { sub: 'sampleGID4' };
+const classQuery = `
+SELECT 
+    C.ID, 
+    C.NAME, 
+    C.DESCRIPTION, 
+    (SELECT AVG(R.RATING) FROM CLASS_RATING AS R WHERE R.CLASS = C.ID) AS RATING, 
+    C.MEETING_LINK, 
+    C.SCHEDULED_FOR, 
+    C.CREATED_AT, 
+    C.INSTRUCTOR AS INSTRUCTOR_ID, 
+    U.NAME AS INSTRUCTOR_NAME, 
+    U.EMAIL AS INSTRUCTOR_EMAIL 
+FROM LOBBY_CLASS AS C 
+LEFT JOIN USER AS U ON C.INSTRUCTOR = U.ID 
+`;
 
 //handle errors
 const serverErrorHandler = (err, res) => {
@@ -47,19 +60,6 @@ const checkForLobby = async (lobbyId, conn) => {
     return checkLobby;
 }
 
-//root, not specific function, just a test for the browser
-// router.get('/', async (req, res) => {
-//     const user = req.user;
-//     const uId = await req.conn.queryAsync('SELECT ID FROM USER WHERE GID = ?', user.sub);
-//     if(uId.length<1){
-//         console.log('error not found');
-//         res.json({ error: 'not found' });
-//     }else{
-//         console.log(uId);
-//         res.json({ root: uId });
-//     }
-// });
-
 //get limited list with given lobby's classes
 router.get('/?', async (req, res) => {
     const lobbyId = req.params.lobbyId;
@@ -70,21 +70,7 @@ router.get('/?', async (req, res) => {
         const checkLobby = await checkForLobby(lobbyId, req.conn);
         if(checkLobby.length<1){ userErrorHandler('invalid lobby id', res); return; }
 
-        const sql = `
-        SELECT C.NAME, 
-            C.DESCRIPTION, 
-            (SELECT AVG(R.RATING) FROM CLASS_RATING AS R WHERE R.CLASS = C.ID) AS RATING, 
-            C.MEETING_LINK, 
-            C.SCHEDULED_FOR, 
-            C.CREATED_AT, 
-            C.INSTRUCTOR AS INSTRUCTOR_ID, 
-            U.NAME AS INSTRUCTOR_NAME, 
-            U.EMAIL AS INSTRUCTOR_EMAIL 
-        FROM LOBBY_CLASS AS C 
-        LEFT JOIN USER AS U ON C.INSTRUCTOR = U.ID 
-        WHERE C.LOBBY = ? 
-        LIMIT ?, ?
-        `;
+        const sql = classQuery + `WHERE C.LOBBY = ? LIMIT ?, ?`;
         const classArray = await req.conn.queryAsync(sql, [lobbyId, offset, limit]);
 
         res.jsonDb(classArray);
@@ -99,7 +85,25 @@ router.get('/:classId/', async (req, res) => {
     const classId = req.params.classId;
 
     try{
+        const sqlClass = classQuery + 'WHERE C.ID = ?';
+        const classRes = await req.conn.queryAsync(sqlClass, [classId]);
+        if(classRes.length<1){ userErrorHandler('invalid class id', res); return; }
 
+        const sqlMembers = `
+        SELECT 
+            M.ID AS MEMBER_ID, 
+            M.JOINED_AT, 
+            U.ID AS USER_ID, 
+            U.NAME, 
+            U.EMAIL,
+            U.PICTURE
+        FROM CLASS_MEMBER AS M 
+        LEFT JOIN USER AS U ON U.ID = M.MEMBER 
+        WHERE M.CLASS = ?
+        `;
+        const members = await req.conn.queryAsync(sqlMembers, [classId]);
+
+        res.jsonDb({ class: classRes[0], members });
     }catch(err){
         serverErrorHandler(err, res);
     }
@@ -107,11 +111,27 @@ router.get('/:classId/', async (req, res) => {
 
 //get class ratings by its id
 router.get('/:classId/ratings/', async (req, res) => {
-    const lobbyId = req.params.lobbyId;
     const classId = req.params.classId;
 
     try{
+        const classRes = await req.conn.queryAsync('SELECT ID FROM LOBBY_CLASS WHERE ID = ?', [classId]);
+        if(classRes.length<1){ userErrorHandler('invalid class id', res); return; }
 
+        const sql = `
+        SELECT 
+            R.RATING, 
+            R.CREATED_AT, 
+            U.ID AS USER_ID, 
+            U.NAME, 
+            U.EMAIL, 
+            U.PICTURE 
+        FROM CLASS_RATING AS R 
+        LEFT JOIN USER AS U ON U.ID = R.USER 
+        WHERE R.CLASS = ?
+        `;
+        const ratings = await req.conn.queryAsync(sql, [classId]);
+
+        res.jsonDb(ratings);
     }catch(err){
         serverErrorHandler(err, res);
     }
@@ -132,8 +152,6 @@ router.post('/', async (req, res) => {
         let timeNum = parseInt(userInput.scheduled_for);
         let sch_for = new Date(0);
         sch_for.setUTCSeconds(timeNum);
-
-        console.log(sch_for);
 
         const sql = 'INSERT INTO LOBBY_CLASS (NAME, DESCRIPTION, INSTRUCTOR, LOBBY, MEETING_LINK, SCHEDULED_FOR) VALUES (?, ?, ?, ?, ?, ?)';
         const okPacket = await req.conn.queryAsync(sql, [userInput.name, userInput.description, userId, lobbyId, userInput.meeting_link, sch_for]);
@@ -258,7 +276,7 @@ router.put('/:classId/', async (req, res) => {
 });
 
 //modify a specific rating
-router.put('/:classId/ratings/:ratingId/', async (req, res) => {
+router.put('/:classId/ratings/', async (req, res) => {
     const classId = req.params.classId;
     // const user = req.user;
     const rating = parseFloat(req.body.rating);
@@ -313,7 +331,7 @@ router.delete('/:classId', async (req, res) => {
 });
 
 //delete a review, only by creator
-router.delete('/:classId/ratings/:ratingId/', async (req, res) => {
+router.delete('/:classId/ratings/', async (req, res) => {
     const lobbyId = req.params.lobbyId;
     const classId = req.params.classId;
     const ratingId = req.params.ratingId;
