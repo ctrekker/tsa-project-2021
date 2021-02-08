@@ -65,6 +65,7 @@ router.get('/?', async (req, res) => {
     const lobbyId = req.params.lobbyId;
     const offset = parseInt(req.query.offset) || 0;
     const limit = parseInt(req.query.limit) || 100;
+    if(limit<1 || limit>1000){ userErrorHandler('invalid limit range, (1-1000)', res); return; }
 
     try{
         const checkLobby = await checkForLobby(lobbyId, req.conn);
@@ -81,7 +82,6 @@ router.get('/?', async (req, res) => {
 
 //get specific class by its id
 router.get('/:classId/', async (req, res) => {
-    const lobbyId = req.params.lobbyId;
     const classId = req.params.classId;
 
     try{
@@ -141,7 +141,7 @@ router.get('/:classId/ratings/', async (req, res) => {
 router.post('/', async (req, res) => {
     const lobbyId = req.params.lobbyId;
     const userInput = req.body;
-    // const user = req.user;
+    const user = req.user;
 
     try{
         const userId = await getUserId(user.sub, req.conn, res);
@@ -168,7 +168,7 @@ router.post('/', async (req, res) => {
 //join a specific class
 router.post('/:classId/join/', async (req, res) => {
     const classId = req.params.classId;
-    // const user = req.user;
+    const user = req.user;
 
     try{
         const userId = await getUserId(user.sub, req.conn, res);
@@ -191,7 +191,7 @@ router.post('/:classId/join/', async (req, res) => {
 //leave a specific class
 router.post('/:classId/leave/', async (req, res) => {
     const classId = req.params.classId;
-    // const user = req.user;
+    const user = req.user;
 
     try{
         const userId = await getUserId(user.sub, req.conn, res);
@@ -215,7 +215,7 @@ router.post('/:classId/ratings/', async (req, res) => {
     const classId = req.params.classId;
     const rating = parseFloat(req.body.rating);
     if(!rating || (rating<1 || rating>5)){ userErrorHandler('invalid rating type, please enter a valid float point value (1-5)', res); return; }
-    // const user = req.user;
+    const user = req.user;
     
     try{
         const userId = await getUserId(user.sub, req.conn, res);
@@ -242,7 +242,7 @@ router.put('/:classId/', async (req, res) => {
     const userInput = req.body;
     if(userInput.length<1){ userErrorHandler('please send some values to modify', res); return; }
     const classId = req.params.classId;
-    // const user = req.user;
+    const user = req.user;
 
     try{
         const userId = await getUserId(user.sub, req.conn, res);
@@ -278,7 +278,7 @@ router.put('/:classId/', async (req, res) => {
 //modify a specific rating
 router.put('/:classId/ratings/', async (req, res) => {
     const classId = req.params.classId;
-    // const user = req.user;
+    const user = req.user;
     const rating = parseFloat(req.body.rating);
     if(!rating || (rating<1 || rating>5)){ userErrorHandler('please enter a valid rating in the body (1-5)', res); return; }
 
@@ -304,7 +304,7 @@ router.put('/:classId/ratings/', async (req, res) => {
 //delete a class, only by creator
 router.delete('/:classId', async (req, res) => {
     const classId = req.params.classId;
-    // const user = req.user;
+    const user = req.user;
 
     try{
         const userId = await getUserId(user.sub, req.conn, res);
@@ -332,10 +332,8 @@ router.delete('/:classId', async (req, res) => {
 
 //delete a review, only by creator
 router.delete('/:classId/ratings/', async (req, res) => {
-    const lobbyId = req.params.lobbyId;
     const classId = req.params.classId;
-    const ratingId = req.params.ratingId;
-    // const user = req.user;
+    const user = req.user;
 
     try{
         const userId = await getUserId(user.sub, req.conn, res);
