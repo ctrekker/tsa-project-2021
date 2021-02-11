@@ -59,7 +59,7 @@ export default function Lobbies() {
                 <Grid item sm="6" md="8" lg="9">
                     <Grid container spacing={3} style={{padding: 20}}>
                         {lobbies.map((lobby, i) => ((
-                            <Grid item xs="12" sm="6" md="4">
+                            <Grid item sm="12" md="6" lg="4">
                                 <LobbyPreview {...lobby}/>
                             </Grid>
                         )))}

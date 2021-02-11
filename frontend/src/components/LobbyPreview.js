@@ -16,7 +16,7 @@ export default function LobbyPreview({name, category, description, picture, memb
     const formattedClassCount = kFormatter(classCount);
     const formattedMemberCount = kFormatter(memberCount);
     const formattedPostCount = kFormatter(postCount);
-    const formatteddescription = description == null ?  null : (description).length > 120 ? (description).substring(0, 119) + "..." : description;
+    const formatteddescription = this.props.description == null ? "No description" : (this.props.description).length > 120 ? (this.props.description).substring(0, 119) + "..." : this.props.description
 
     return(
         <Card style = {{height: 200}}>
@@ -33,7 +33,7 @@ export default function LobbyPreview({name, category, description, picture, memb
                         </div>
                     </div>
                     <CardContent style={{height:35, marginTop: -15, marginBottom: 15}}>
-                        <Typography variant="p" style ={formatteddescription ? {} : {color: "gray"}}>{formatteddescription ? formatteddescription : "No Description"}</Typography>
+                        <Typography variant="p" color={this.props.description ? 'textPrimary' : 'textSecondary'}>{formatteddescription}</Typography>
                     </CardContent>
                     
                     <CardActions style = {{display: "flex", flexFlow: "row-reverse", padding: 5, margin: 5}}>
