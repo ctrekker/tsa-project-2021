@@ -6,7 +6,9 @@ import {
   Link
 } from 'react-router-dom';
 import Lobby from './views/Lobby';
+import Lobbies from './views/Lobbies';
 import Config from './Config';
+import Landing from './views/Landing';
 
 function App() {
   function onSignIn(googleUser) {
@@ -48,8 +50,19 @@ function App() {
             <p>Very poorly styled second page</p>
             <Link to="/">Go back home</Link>
           </Route>
+          <Route exact path="/lobbies">
+            <Lobbies/>
+          </Route>
           <Route path="/lobby/:id">
-            <Lobby/>
+            <Lobby
+              name="Calculus"
+              description="Studying the analysis of continuous changes in mathematical functions. More specifically, this lobby refers to differential calculus."
+            />
+          </Route>
+
+          { /* TEST ROUTES */ }
+          <Route path="/landing">
+            <Landing/>
           </Route>
         </Switch>
       </div>

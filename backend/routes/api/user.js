@@ -7,8 +7,8 @@ const router = new express.Router();
 const client = new OAuth2Client(process.env.GAPI_CLIENT_ID)
 
 router.get('/', requireAuth, (req, res) => res.json(req.user));
-router.get('/:gid', requireAuth, async (req, res) => {
-    const user = await req.conn.queryAsync('SELECT ID, GID, NAME, PICTURE FROM USER WHERE GID = ?', [req.params.gid]);
+router.get('/:id', requireAuth, async (req, res) => {
+    const user = await req.conn.queryAsync('SELECT ID, GID, NAME, PICTURE FROM USER WHERE ID = ?', [req.params.id]);
     if(user.length > 0) {
         res.jsonDb(user[0]);
     }
@@ -25,8 +25,6 @@ router.post('/', async (req, res) => {
     const authToken = issue(payload);
     res.cookie('auth', authToken, {});
     res.json(payload);
-
-    const conn = await getDb();
 
     console.log(payload);
     req.conn.query('SELECT * FROM USER WHERE GID = ?', payload.sub, (err, results) => {
