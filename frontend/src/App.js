@@ -24,9 +24,7 @@ function App() {
       headers: {
         'content-type': 'application/json'
       },
-      body: JSON.stringify({
-        token
-      })
+      body: JSON.stringify({ token })
     });
   }
   window.onSignIn = onSignIn;
