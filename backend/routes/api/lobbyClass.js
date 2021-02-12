@@ -37,7 +37,7 @@ const getUserId = async (GID, conn, res) => {
 
 //check for a valid classId and return userLength to check membership
 const checkClassId = async (classId, conn, res) => {
-    const checkClass = await conn.queryAsync('SELECT * FROM LOBBY_CLASS WHERE ID = ?', [classId])
+    const checkClass = await conn.queryAsync('SELECT * FROM LOBBY_CLASS WHERE ID = ?', [classId]);
     if(checkClass.length<1){ userErrorHandler('classId is not valid', res); return; }
     return checkClass;
 }
@@ -60,8 +60,13 @@ const checkForLobby = async (lobbyId, conn) => {
     return checkLobby;
 }
 
+//
+//
+//  GET
+//
+//
 //get limited list with given lobby's classes
-router.get('/?', async (req, res) => {
+router.get('/', async (req, res) => {
     const lobbyId = req.params.lobbyId;
     const offset = parseInt(req.query.offset) || 0;
     const limit = parseInt(req.query.limit) || 100;
@@ -137,6 +142,11 @@ router.get('/:classId/ratings/', async (req, res) => {
     }
 });
 
+//
+//
+//  POST
+//
+//
 //add a class to a lobby
 router.post('/', async (req, res) => {
     const lobbyId = req.params.lobbyId;
@@ -237,6 +247,11 @@ router.post('/:classId/ratings/', async (req, res) => {
     }
 });
 
+//
+//
+//  PUT
+//
+//
 //modify specific class
 router.put('/:classId/', async (req, res) => {
     const userInput = req.body;
@@ -301,6 +316,11 @@ router.put('/:classId/ratings/', async (req, res) => {
     }
 });
 
+//
+//
+//  DELETE
+//
+//
 //delete a class, only by creator
 router.delete('/:classId', async (req, res) => {
     const classId = req.params.classId;
