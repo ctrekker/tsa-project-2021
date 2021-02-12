@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
+const LIMIT_RANGE = [1, 1000];
+const RATING_RANGE = [1, 5];
 
 const classQuery = `
 SELECT 
@@ -70,7 +72,7 @@ router.get('/', async (req, res) => {
     const lobbyId = req.params.lobbyId;
     const offset = parseInt(req.query.offset) || 0;
     const limit = parseInt(req.query.limit) || 100;
-    if(limit<1 || limit>1000){ userErrorHandler('invalid limit range, (1-1000)', res); return; }
+    if(limit<LIMIT_RANGE[0] || limit>LIMIT_RANGE[1]){ userErrorHandler('invalid limit range, ('+LIMIT_RANGE[0]+'-'+LIMIT_RANGE[1]+')', res); return; }
 
     try{
         const checkLobby = await checkForLobby(lobbyId, req.conn);
@@ -224,7 +226,7 @@ router.post('/:classId/leave/', async (req, res) => {
 router.post('/:classId/ratings/', async (req, res) => {
     const classId = req.params.classId;
     const rating = parseFloat(req.body.rating);
-    if(!rating || (rating<1 || rating>5)){ userErrorHandler('invalid rating type, please enter a valid float point value (1-5)', res); return; }
+    if(!rating || (rating<RATING_RANGE[0] || rating>RATING_RANGE[1])){ userErrorHandler('invalid rating type, please enter a valid float point value ('+RATING_RANGE[0]+'-'+RATING_RANGE[1]+')', res); return; }
     const user = req.user;
     
     try{
@@ -295,7 +297,7 @@ router.put('/:classId/ratings/', async (req, res) => {
     const classId = req.params.classId;
     const user = req.user;
     const rating = parseFloat(req.body.rating);
-    if(!rating || (rating<1 || rating>5)){ userErrorHandler('please enter a valid rating in the body (1-5)', res); return; }
+    if(!rating || (rating<RATING_RANGE[0] || rating>RATING_RANGE[1])){ userErrorHandler('please enter a valid rating in the body ('+RATING_RANGE[0]+'-'+RATING_RANGE[1]+')', res); return; }
 
     try{
         const userId = await getUserId(user.sub, req.conn, res);
@@ -307,6 +309,7 @@ router.put('/:classId/ratings/', async (req, res) => {
 
         const sql = 'UPDATE CLASS_RATING SET RATING = ? WHERE ID = ?';
         const okPacket = await req.conn.queryAsync(sql, [rating, oldRating[0].ID]);
+
         const newRating = await req.conn.queryAsync('SELECT * FROM CLASS_RATING WHERE ID = ?', [oldRating[0].ID]);
         if(newRating.length<1){ throw Error('unable to confirm changes to rating'); }
         
