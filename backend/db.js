@@ -68,12 +68,24 @@ module.exports = {
 };
 module.exports.db = async (req, res, next) => {
     req.conn = await module.exports.getDb();
-    res.jsonDb = (obj) => {
+    res.objDb = (obj) => {
         const out = {};
         for(let [k, v] of Object.entries(obj)) {
             out[k.toLowerCase()] = v;
         }
-        res.json(out);
+        return out;
+    };
+    res.jsonDb = (obj) => {
+        if(obj.length) {
+            const out = [];
+            for(let e of obj) {
+                out.push(res.objDb(e));
+            }
+            res.json(out);
+        }
+        else {
+            res.json(res.objDb(obj));
+        }
     };
     next();
 }

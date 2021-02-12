@@ -17,20 +17,21 @@ router.get('/', requireAuth, async (req, res) => {
     let category = -1;
     if (req.query.category) category = parseInt(req.query.category);
 
-    let sql = "SELECT LOBBY.NAME AS LOBBY_NAME, \
-    LOBBY_CATEGORY.NAME AS CATEGORY, \
-    LOBBY.CREATOR, \
-    LOBBY.CREATED_AT, \
-    LOBBY.DESCRIPTION \
-    FROM LOBBY \
-    LEFT JOIN LOBBY_CATEGORY \
-    ON LOBBY.CATEGORY=LOBBY_CATEGORY.ID \
-    LIMIT ?, ?";
+    let sql = `SELECT LOBBY.ID AS ID,
+    LOBBY.NAME AS NAME,
+    LOBBY_CATEGORY.NAME AS CATEGORY,
+    LOBBY.CREATOR,
+    LOBBY.CREATED_AT,
+    LOBBY.DESCRIPTION
+    FROM LOBBY
+    LEFT JOIN LOBBY_CATEGORY
+    ON LOBBY.CATEGORY=LOBBY_CATEGORY.ID
+    LIMIT ?, ?`;
     if (req.query.category) sql += " WHERE LOBBY.CATEGORY = " + mysql.escape(category);
 
     const lobbies = await req.conn.queryAsync(sql, [offset, limit]);
     
-    if(lobbies) return res.json(lobbies);
+    if(lobbies) return res.jsonDb(lobbies);
     return res.status(400).send();
 })
 router.get('/:lobbyId', requireAuth, async(req,res) => {    
@@ -46,8 +47,9 @@ router.get('/:lobbyId', requireAuth, async(req,res) => {
     lobby = lobby[0]
     lobby.MEMBERS = JSON.parse(lobby.MEMBERS);
     console.log(lobby.MEMBERS[0]);
+    console.log(lobby);
     
-    if (lobby) return res.json(lobby);
+    if (lobby) return res.jsonDb(lobby);
     return res.status(404).send();
 })
 
@@ -61,7 +63,7 @@ router.post('/', requireAuth, async (req, res) => {
     if(!req.body.name || !req.body.category || !req.body.description) return res.status(412).send();
     const insert = await req.conn.queryAsync("INSERT INTO LOBBY (NAME, CATEGORY, DESCRIPTION, CREATOR) VALUES (?, ?, ?, (SELECT ID FROM USER WHERE EMAIL=?));", [req.body.name, req.body.category, req.body.description, req.user.email]);
 
-    if(insert) return res.json(await req.conn.queryAsync("SELECT * FROM LOBBY WHERE ID=LAST_INSERT_ID();"));
+    if(insert) return res.jsonDb((await req.conn.queryAsync("SELECT * FROM LOBBY WHERE ID=LAST_INSERT_ID();"))[0]);
     return res.status(400).send();
 })
 router.post('/:lobbyId/join', requireAuth, async (req, res) => {
