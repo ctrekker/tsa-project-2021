@@ -6,7 +6,7 @@ import './LobbyPost.css';
 
 
 function kFormatter(num) {
-    return num == null ? 0 : Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num)
+    return num == null ? 0 : num > 999 ? (num/1000).toFixed(1) + 'k' : num
 }
 
 export default function LobbyPreview({name, category, description, picture, memberCount, postCount, classCount, rating, lobbyId}){
