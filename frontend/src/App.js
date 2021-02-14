@@ -9,6 +9,7 @@ import Lobby from './views/Lobby';
 import Lobbies from './views/Lobbies';
 import Config from './Config';
 import Landing from './views/Landing';
+import Home from './views/Home';
 
 function App() {
   function onSignIn(googleUser) {
@@ -56,6 +57,9 @@ function App() {
               name="Calculus"
               description="Studying the analysis of continuous changes in mathematical functions. More specifically, this lobby refers to differential calculus."
             />
+          </Route>
+          <Route path="/home" exact>
+            <Home/>
           </Route>
 
           { /* TEST ROUTES */ }
