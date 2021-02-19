@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import { withRouter } from 'react-router-dom';
 
-export default function MenuAppBar() {
+function Landing({ history }) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -12,6 +13,19 @@ export default function MenuAppBar() {
     const handleClose = () => {
       setOpen(false);
     };
+
+  useEffect(() => {
+    setTimeout(() => {
+      /*global gapi*/
+      /*eslint no-undef: "error"*/
+      const GoogleAuth = gapi.auth2.getAuthInstance();
+      const user = GoogleAuth.currentUser.get();
+      const profile = user.getBasicProfile();
+      if(profile) {
+        history.push('/home');
+      }
+    }, 1000);
+  });
 
   return (
     <div>
@@ -24,3 +38,5 @@ export default function MenuAppBar() {
     </div>
   );
 }
+
+export default withRouter(Landing);
