@@ -36,7 +36,7 @@ function App() {
         <Switch>
           <Route path="/" exact>
             <header className="App-header">
-              <div className="g-signin2" data-onsuccess="onSignIn"></div>
+              {/* <div className="g-signin2" data-onsuccess="onSignIn"></div> */}
               <Link
                 className="App-link"
                 to="/test"
