@@ -50,7 +50,6 @@ export default function Home(){
         .then(res => {
             setLobbies(res);
             console.log(lobbies)
-
         }).catch(err => {
             if(err) console.log(err);
         });
