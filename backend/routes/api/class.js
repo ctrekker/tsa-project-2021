@@ -35,6 +35,7 @@ router.get('/', async (req, res) => {
             M.JOINED_AT, 
             C.NAME AS CLASS_NAME, 
             C.DESCRIPTION AS CLASS_DESCRIPTION, 
+            (SELECT ROUND(AVG(R.RATING), 5) FROM CLASS_RATING AS R WHERE R.CLASS = C.ID) AS CLASS_RATING, 
             C.MEETING_LINK, 
             C.SCHEDULED_FOR, 
             C.CREATED_AT, 
