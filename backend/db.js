@@ -76,7 +76,7 @@ module.exports.db = async (req, res, next) => {
         return out;
     };
     res.jsonDb = (obj) => {
-        if(obj.length) {
+        if(obj.length === undefined) {
             const out = [];
             for(let e of obj) {
                 out.push(res.objDb(e));
