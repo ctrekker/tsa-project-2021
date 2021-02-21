@@ -54,7 +54,7 @@ export default function Home(){
             credentials: 'include'
         }).then(res => res.json())
         .then(res => {
-            setLobbies(res.length > 0 ? res : []);
+            setLobbies(res);
         }).catch(err => {
             if(err) console.log(err);
         });
@@ -68,7 +68,7 @@ export default function Home(){
             credentials: 'include'
         }).then(res => res.json())
         .then(res => {
-            setClassPreviews(res.length > 0 ? res.reverse() : []);
+            setClassPreviews(res);
         }).catch(err => {
             if(err) console.log(err);
         });
