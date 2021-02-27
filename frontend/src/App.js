@@ -11,6 +11,7 @@ import Lobbies from './views/Lobbies';
 import Config from './Config';
 import Landing from './views/Landing';
 import Home from './views/Home';
+import ClassView from "./views/ClassView";
 
 function App() {
   function onSignIn(googleUser) {
@@ -45,11 +46,14 @@ function App() {
           <Route exact path="/lobbies">
             <Lobbies/>
           </Route>
-          <Route path="/lobby/:id">
+          <Route exact path="/lobby/:id">
             <Lobby
               name="Calculus"
               description="Studying the analysis of continuous changes in mathematical functions. More specifically, this lobby refers to differential calculus."
             />
+          </Route>
+          <Route exact path="/lobby/:lobbyid/class/:classid">
+            <ClassView/>
           </Route>
           <Route path="/home" exact>
             <Home/>

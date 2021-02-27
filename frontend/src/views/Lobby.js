@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Divider, Grid, Typography, IconButton, MenuItem, MenuList, ListItemText, Collapse } from '@material-ui/core';
+import { Container, Divider, Grid, Typography, IconButton, MenuItem, MenuList, ListItemText, Collapse, Button } from '@material-ui/core';
 import { useParams } from 'react-router-dom';
 import ClassPreview from '../components/ClassPreview';
+import FlexCenter from '../components/FlexCenter';
 import LobbyPost from '../components/LobbyPost';
 import './Lobby.css';
 import moment from 'moment';
@@ -35,11 +36,29 @@ export default function Lobby() {
     const [descriptionExpanded, setDescriptionExpanded] = useState(true);
     const [lobby, setLobby] = useState({});
     const [lobbyPosts, setLobbyPosts] = useState([]);
+    const [lobbyClasses, setLobbyClasses] = useState([]);
+    const [lobbyVersion, setLobbyVersion] = useState(0);
+    const [lobbyPostsVersion, setLobbyPostsVersion] = useState(0);
+    const [lobbyClassesVersion, setLobbyClassesVersion] = useState(0);
+
     const { name='', description='Loading...' } = lobby;
     let { id } = useParams();
 
     const lobbyPostsLeft = lobbyPosts.slice(0, Math.ceil(lobbyPosts.length / 2));
     const lobbyPostsRight = lobbyPosts.slice(Math.ceil(lobbyPosts.length / 2), lobbyPosts.length);
+
+    function handleJoinLeave() {
+        fetch(Config.endpoint(`/lobbies/${id}/${lobby.is_member === 0 ? 'join' : 'leave'}`), {
+            method: 'POST'
+        })
+            .then(res => res.json())
+            .then(res => {
+                setLobbyVersion(lobbyVersion + 1);
+            })
+            .catch(res => {
+                console.log(res);
+            });
+    }
 
     useEffect(() => {
         function handleScroll(e) {
@@ -60,35 +79,51 @@ export default function Lobby() {
 
     useEffect(() => {
         fetch(Config.endpoint(`/lobbies/${id}`), {
-            method: 'GET',
-            credentials: 'include'
+            method: 'GET'
         }).then(res => res.json())
         .then(res => {
             setLobby(res);
         }).catch(err => {
-            if(err) console.log(err);
+            console.log(err);
         });
-
+    }, [id, lobbyVersion]);
+    useEffect(() => {
         fetch(Config.endpoint(`/lobbies/${id}/posts/`), {
-            method: 'GET',
-            credentials: 'include'
+            method: 'GET'
         }).then(res => res.json())
         .then(res => {
             setLobbyPosts(res);
         }).catch(err => {
-            if(err) console.log(err);
+            console.log(err);
         });
-    }, [id]);
+    }, [id, lobbyPostsVersion]);
+    useEffect(() => {
+        fetch(Config.endpoint(`/lobbies/${id}/classes/`), {
+            method: 'GET'
+        }).then(res => res.json())
+        .then(res => {
+            setLobbyClasses(res);
+        }).catch(err => {
+            console.log(err);
+        });
+    }, [id, lobbyClassesVersion]);
 
     return (
         <Container maxWidth="lg" style={{marginTop: 20}}>
             <div style={{position: 'sticky', top: -10, paddingTop: 10, zIndex: 100, background: 'white'}}>
-                <Typography variant="h4">{name}</Typography>
-                <Collapse in={descriptionExpanded}>
-                    <Typography variant="body1" color="textSecondary">{description}</Typography>
-                </Collapse>
+                <FlexCenter>
+                    <div>
+                        <Typography variant="h4">{name}</Typography>
+                        <Collapse in={descriptionExpanded}>
+                            <Typography variant="body1" color="textSecondary">{description}</Typography>
+                        </Collapse>
+                    </div>
+                    <div style={{flexGrow: 1}}/>
+                    <Button onClick={handleJoinLeave} variant="contained" color={lobby.is_member === 0 ? 'primary' : 'secondary'} size={lobby.is_member === 0 ? 'large' : 'small'}>{ lobby.is_member === 0 ? 'Join' : 'Leave' }</Button>
+                </FlexCenter>
                 <Divider/>
             </div>
+                
             <Grid container>
                 <Grid item xs="8">
                     <Grid container spacing={3} style={{padding: 15}}>
@@ -124,12 +159,21 @@ export default function Lobby() {
                 <Grid item xs="4" style={{borderLeft: '1px solid lightgrey'}}>
                     <div style={{position: 'sticky', top: 50, padding: '10px'}}>
                         <Grid container spacing={2}>
-                            <Grid item xs="12">
-                                <ClassPreview onClick={() => alert('clicked!')} title="Basics of Derivatives" author="Connor Burns" rating={'4.3/5'} scheduledFor={moment('2/8/2021 7:30')} date="Feb 8th" time="7:30 AM"/>
-                            </Grid>
-                            <Grid item xs="12">
-                                <ClassPreview title="Mistakes in Calculus 10th Edition" author="Todd Mortley" rating={'6.28/5'} scheduledFor={moment('2/11/2021 6:00')} date="Feb 11th" time="6:00 AM"/>
-                            </Grid>
+                            {lobbyClasses.map(lobbyClass => (
+                                <Grid item xs="12">
+                                    <ClassPreview
+                                        onClick={() => alert('clicked!')}
+                                        name={lobbyClass.name}
+                                        instructor_name={lobbyClass.instructor_name}
+                                        rating={typeof(lobbyClass.rating) != null ? "No Rating" : `${lobbyClass.rating.slice(0, 3)}/5`}
+                                        scheduledFor={moment(lobbyClass.scheduled_for)}/>
+                                </Grid>
+                            ))}
+                            {lobbyClasses.length === 0 && (
+                                <div style={{textAlign: 'center', marginTop: 10, width: '100%'}}>
+                                    <i>No classes yet</i>
+                                </div>
+                            )}
                         </Grid>
                     </div>
                 </Grid>
