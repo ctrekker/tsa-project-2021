@@ -11,7 +11,7 @@ GET
 _________________
 */
 
-router.get('/', requireAuth, async (req, res) => {    
+router.get('/', requireAuth, async (req, res) => { 
     const limit = parseInt(req.query.limit) || 100;
     const offset = parseInt(req.query.offset) || 0;
     const userLobbies = (req.query.userLobbies == 'true') || false;
@@ -31,15 +31,19 @@ router.get('/', requireAuth, async (req, res) => {
     ON LOBBY.CATEGORY=LOBBY_CATEGORY.ID `;
     
     let params = [];
-    if(req.query.category || userLobbies){
+    if(req.query.category || userLobbies || req.query.search){
         sql += "WHERE ";
     }
 
     if (req.query.category) { 
         sql += " LOBBY.CATEGORY = " + mysql.escape(category);
     }
+    if(req.query.search){
+        if(req.query.category) sql += " AND "
+        sql += ` LOBBY.NAME LIKE CONCAT (${mysql.escape(req.query.search)}, '%') `
+    }
     if(userLobbies){ 
-        if(req.query.category) sql += " AND ";
+        if(req.query.category || req.query.search) sql += " AND ";
         sql += " LOBBY.ID IN (SELECT L.LOBBY FROM LOBBY_MEMBER AS L LEFT JOIN USER AS U ON U.ID = L.MEMBER WHERE U.EMAIL = ?)";
         params.push(req.user.email);
     }
