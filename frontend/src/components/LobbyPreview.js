@@ -9,31 +9,31 @@ function kFormatter(num) {
     return num == null ? 0 : num > 999 ? (num/1000).toFixed(1) + 'k' : num
 }
 
-export default function LobbyPreview({name, category, description, picture, memberCount, postCount, classCount, rating, lobbyId}){
+export default function LobbyPreview({NAME, CATEGORY, DESCRIPTION, picture, memberCount, postCount, classCount, rating, ID}){
     // TODO figure out when to use this
     const [showCategory, setShowCategory] = useState(true);
 
     const formattedClassCount = kFormatter(classCount);
     const formattedMemberCount = kFormatter(memberCount);
     const formattedPostCount = kFormatter(postCount);
-    const formatteddescription = description == null ? "No description" : (description).length > 120 ? (description).substring(0, 119) + "..." : description
+    const formatteddescription = DESCRIPTION == null ? "No description" : (DESCRIPTION).length > 120 ? (DESCRIPTION).substring(0, 119) + "..." : DESCRIPTION
 
     return(
         <Card style = {{height: 200}}>
             {/* TODO proper linking istead of this */}
-            <RouterLink className="userLink" to={`/lobby/${lobbyId}`}>
+            <RouterLink className="userLink" to={`/lobby/${ID}`}>
                 <CardActionArea>
                     <div style={{display:"flex", flexDirection: "row"}}>
                         {/* TODO add actual default background*/}
                         <img src={picture || 'https://lh3.googleusercontent.com/a-/AOh14GjGp4Umv1QrrFtqqOHUbSbMAulx7XhYJh_Q4esNfA=s96-c'} style = {{borderRadius: 10, height: 50, width:50, backgroundSize: "contatin", backgroundRepeat: "no-repeat", boxShadow: '#00000017 0px 3px 5px 0', border: '2px solid #d5d5d5', margin: 15}}/>
                         <div style={{flexDirection: "column", marginTop: 15}}>
                             {/* TODO determine maximum length and ideal scaling */}
-                            <Typography variant={(name).length > 15 ? "subtitle1" : "h6"} style={{fontWeight: "bold"}}>{name}</Typography>
-                            {showCategory?<Typography variant="subtitle1" style={{color: "gray", marginTop: -10}}>{category}</Typography>:null}
+                            <Typography variant={(NAME).length > 15 ? "subtitle1" : "h6"} style={{fontWeight: "bold"}}>{NAME}</Typography>
+                            {showCategory?<Typography variant="subtitle1" style={{color: "gray", marginTop: -10}}>{CATEGORY}</Typography>:null}
                         </div>
                     </div>
                     <CardContent style={{height:35, marginTop: -15, marginBottom: 15}}>
-                        <Typography variant="p" color={description ? 'textPrimary' : 'textSecondary'}>{formatteddescription}</Typography>
+                        <Typography variant="p" color={DESCRIPTION ? 'textPrimary' : 'textSecondary'}>{formatteddescription}</Typography>
                     </CardContent>
                     
                     <CardActions style = {{display: "flex", flexFlow: "row-reverse", padding: 5, margin: 5}}>
