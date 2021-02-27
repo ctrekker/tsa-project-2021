@@ -5,10 +5,10 @@ import moment from 'moment';
 
 export default function ClassPreview(props) {
     const {
-        CLASS_NAME,
-        INSTRUCTOR_NAME,
-        CLASS_RATING,
-        SCHEDULED_FOR,
+        name: CLASS_NAME,
+        instructor_name: INSTRUCTOR_NAME,
+        rating: CLASS_RATING,
+        scheduled_for: SCHEDULED_FOR,
         onClick
     } = props;
 
