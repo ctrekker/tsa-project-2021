@@ -8,12 +8,20 @@ import './LobbyPost.css';
 
 export default function ClassPreview(props) {
     const {
+<<<<<<< HEAD
         class_name,
         instructor_name,
         class_rating,
         scheduled_for,
         class_id,
         lobby_id
+=======
+        name: CLASS_NAME,
+        instructor_name: INSTRUCTOR_NAME,
+        rating: CLASS_RATING,
+        scheduled_for: SCHEDULED_FOR,
+        onClick
+>>>>>>> 014bd52b2fab927eb1a3c43ae0359645e24b5571
     } = props;
 
     return (
