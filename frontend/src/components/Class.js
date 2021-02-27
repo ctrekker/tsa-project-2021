@@ -1,5 +1,4 @@
 import React from 'react'
-import './Class.css';
 
 export default function ClassComp(props) {
     const {

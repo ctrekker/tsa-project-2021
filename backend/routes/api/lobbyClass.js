@@ -110,7 +110,7 @@ router.get('/:classId/', async (req, res) => {
         `;
         const members = await req.conn.queryAsync(sqlMembers, [classId]);
 
-        res.jsonDb({ class: classRes[0], members });
+        res.jsonDb({ ...classRes[0], members: members.map(x => res.objDb(x)) });
     }catch(err){
         serverErrorHandler(err, res);
     }
@@ -161,12 +161,12 @@ router.post('/', async (req, res) => {
         const checkLobby = await checkForLobby(lobbyId, req.conn);
         if(checkLobby.length<1){ userErrorHandler('invalid lobby id', res); return; }
 
-        let timeNum = parseInt(userInput.scheduled_for);
-        let sch_for = new Date(0);
-        sch_for.setUTCSeconds(timeNum);
+        let sch_for = new Date(userInput.scheduled_for);
 
         const sql = 'INSERT INTO LOBBY_CLASS (NAME, DESCRIPTION, INSTRUCTOR, LOBBY, MEETING_LINK, SCHEDULED_FOR) VALUES (?, ?, ?, ?, ?, ?)';
         const okPacket = await req.conn.queryAsync(sql, [userInput.name, userInput.description, userId, lobbyId, userInput.meeting_link, sch_for]);
+
+        await req.conn.queryAsync('INSERT INTO CLASS_MEMBER (MEMBER, CLASS) VALUES (?, ?)', [userId, okPacket.insertId]);
         
         const newClass = await req.conn.queryAsync('SELECT * FROM LOBBY_CLASS WHERE ID = ?', okPacket.insertId);
         if(newClass.length<1){ throw Error('created class not found'); }
