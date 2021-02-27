@@ -9,6 +9,7 @@ SELECT
     C.NAME, 
     C.DESCRIPTION, 
     (SELECT AVG(R.RATING) FROM CLASS_RATING AS R WHERE R.CLASS = C.ID) AS RATING, 
+    (SELECT COUNT(*) FROM CLASS_MEMBER AS CM WHERE CM.CLASS = C.ID AND CM.MEMBER = ?) AS IS_MEMBER, 
     C.MEETING_LINK, 
     C.SCHEDULED_FOR, 
     C.CREATED_AT, 
@@ -79,7 +80,7 @@ router.get('/', async (req, res) => {
         if(checkLobby.length<1){ userErrorHandler('invalid lobby id', res); return; }
 
         const sql = classQuery + `WHERE C.LOBBY = ? LIMIT ?, ?`;
-        const classArray = await req.conn.queryAsync(sql, [lobbyId, offset, limit]);
+        const classArray = await req.conn.queryAsync(sql, [req.user.id, lobbyId, offset, limit]);
 
         res.jsonDb(classArray);
     }catch(err){
@@ -93,7 +94,7 @@ router.get('/:classId/', async (req, res) => {
 
     try{
         const sqlClass = classQuery + 'WHERE C.ID = ?';
-        const classRes = await req.conn.queryAsync(sqlClass, [classId]);
+        const classRes = await req.conn.queryAsync(sqlClass, [req.user.id, classId]);
         if(classRes.length<1){ userErrorHandler('invalid class id', res); return; }
 
         const sqlMembers = `
