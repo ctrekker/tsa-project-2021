@@ -7,23 +7,33 @@ router.use(requireAuth);
 
 //get all posts from lobby
 router.get('/', async (req, res) => {
-    res.jsonDb(await req.conn.queryAsync('SELECT * FROM LOBBY_POST WHERE LOBBY = ?', [req.params.lobbyId]));
+    res.jsonDb(await req.conn.queryAsync(`
+    SELECT
+        LP.ID, U.NAME, U.PICTURE, LP.CONTENT, LP.CREATED_AT,
+        (SELECT COUNT(*) FROM LOBBY_POST_LIKE WHERE POST = LP.ID) AS LIKES
+    FROM
+        LOBBY_POST AS LP
+            LEFT JOIN
+        USER AS U
+    ON LP.AUTHOR = U.ID
+    WHERE LP.LOBBY = ?
+    `, [req.params.lobbyId]));
 });
 
 //get post by id
 router.get('/:postId/', async (req, res) => {
     
-    const sql = ```
+    const sql = `
     SELECT
         LP.ID, U.NAME, U.PICTURE, LP.CONTENT, LP.CREATED_AT,
-        (SELECT COUNT(*) FROM LOBBY_POST_LIKE WHERE POST = LOBBY_POST.ID) AS LIKES
+        (SELECT COUNT(*) FROM LOBBY_POST_LIKE WHERE POST = LP.ID) AS LIKES
     FROM
         LOBBY_POST AS LP
             LEFT JOIN
         USER AS U
     ON LP.AUTHOR = U.ID
     WHERE LP.LOBBY = ? AND LP.ID = ?
-    ```;
+    `;
     const post = await req.conn.queryAsync(sql, [req.params.lobbyId, req.params.postId]);
     post.subposts = await req.conn.queryAsync('SELECT * FROM LOBBY_POST WHERE PARENT = ?', [post.ID]);
     res.jsonDb(post);
