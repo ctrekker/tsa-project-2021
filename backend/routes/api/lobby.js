@@ -24,7 +24,8 @@ router.get('/', requireAuth, async (req, res) => {
     LOBBY_CATEGORY.NAME AS CATEGORY,
     LOBBY.CREATOR,
     LOBBY.CREATED_AT,
-    LOBBY.DESCRIPTION
+    LOBBY.DESCRIPTION,
+    (SELECT COUNT(*) FROM LOBBY_MEMBER AS LM WHERE LM.LOBBY = LOBBY.ID AND LM.MEMBER = ${mysql.escape(req.user.id)}) AS IS_MEMBER
     FROM LOBBY
     LEFT JOIN LOBBY_CATEGORY
     ON LOBBY.CATEGORY=LOBBY_CATEGORY.ID `;
@@ -46,8 +47,6 @@ router.get('/', requireAuth, async (req, res) => {
     params.push(offset);
     params.push(limit);
 
-    console.log(sql);
-
     const lobbies = await req.conn.queryAsync(sql, params);
     
     if(lobbies) return res.jsonDb(lobbies);
@@ -57,7 +56,8 @@ router.get('/', requireAuth, async (req, res) => {
 router.get('/:lobbyId', requireAuth, async(req,res) => {    
     
     const sql = `SELECT LOBBY.ID, LOBBY.NAME, LOBBY.CATEGORY, LOBBY.CREATOR, LOBBY.CREATED_AT, LOBBY.DESCRIPTION, LOBBY.ICON, \
-    JSON_ARRAYAGG(JSON_OBJECT('USER', USER.ID, 'USER_NAME', USER.NAME, 'EMAIL', USER.EMAIL,'USER_PICTURE', USER.PICTURE)) AS MEMBERS \
+    JSON_ARRAYAGG(JSON_OBJECT('USER', USER.ID, 'USER_NAME', USER.NAME, 'EMAIL', USER.EMAIL,'USER_PICTURE', USER.PICTURE)) AS MEMBERS, \
+    (SELECT COUNT(*) FROM LOBBY_MEMBER AS LM WHERE LM.LOBBY = LOBBY.ID AND LM.MEMBER = ${mysql.escape(req.user.id)}) AS IS_MEMBER
     FROM LOBBY \
     LEFT JOIN LOBBY_MEMBER ON LOBBY.ID = LOBBY_MEMBER.LOBBY \
     LEFT JOIN USER ON USER.ID = LOBBY_MEMBER.MEMBER \
@@ -66,8 +66,6 @@ router.get('/:lobbyId', requireAuth, async(req,res) => {
     let lobby = await req.conn.queryAsync(sql, [req.params.lobbyId]);
     lobby = lobby[0]
     lobby.MEMBERS = JSON.parse(lobby.MEMBERS);
-    console.log(lobby.MEMBERS[0]);
-    console.log(lobby);
     
     if (lobby) return res.jsonDb(lobby);
     return res.status(404).send();

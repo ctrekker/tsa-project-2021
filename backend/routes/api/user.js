@@ -22,9 +22,6 @@ router.post('/', async (req, res) => {
         audience: process.env.GAPI_CLIENT_ID
     });
     const payload = ticket.getPayload();
-    const authToken = issue(payload);
-    res.cookie('auth', authToken, {});
-    res.json(payload);
 
     console.log(payload);
     req.conn.query('SELECT * FROM USER WHERE GID = ?', payload.sub, (err, results) => {
@@ -32,7 +29,25 @@ router.post('/', async (req, res) => {
             const sql = 'INSERT INTO USER (GID, NAME, EMAIL, PICTURE) VALUES (?, ?, ?, ?)';
             req.conn.query(sql, [payload.sub, payload.name, payload.email, payload.picture], (err, results) => {
                 if(err) console.log(err);
+
+                insertId
+                const betterPayload = {
+                    ...payload,
+                    id: insertedId
+                };
+                const authToken = issue(betterPayload);
+                res.cookie('auth', authToken, {});
+                res.json(betterPayload);
             });
+        }
+        else {
+            const betterPayload = {
+                ...payload,
+                id: results[0].ID
+            };
+            const authToken = issue(betterPayload);
+            res.cookie('auth', authToken, {});
+            res.json(betterPayload);
         }
     });
 });
