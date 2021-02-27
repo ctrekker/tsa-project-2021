@@ -48,7 +48,7 @@ export default function Lobbies() {
             credentials: 'include'
         }).then(res => res.json())
         .then(res => {
-            setLobbies(Object.values(res));
+            setLobbies(res);
         }).catch(err => {
             if(err) console.log(err);
         });

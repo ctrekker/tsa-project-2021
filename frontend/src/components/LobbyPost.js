@@ -26,7 +26,10 @@ export default function LobbyPost({ lobbyId, id, author, createdAt, content, rep
         fetch(Config.endpoint(`/lobbies/${lobbyId}/posts/${id}/like`), {
             method: 'POST',
             credentials: 'include'
-        });
+        })
+            .then(() => {
+                // TODO: Perform state update on parent component (bad practice I know)
+            });
     }
 
     return (
