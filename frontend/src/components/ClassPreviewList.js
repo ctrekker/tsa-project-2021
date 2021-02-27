@@ -9,7 +9,7 @@ export default function ClassPreviewList({classPreviews, maxHeight}){
                 <Grid container spacing={2}>
                     {classPreviews.map((classPreview, i) => ((
                         <Grid item xs="12">
-                            <ClassPreview{...classPreview}/>
+                            <ClassPreview {...classPreview}/>
                         </Grid>
                     )))}
                 </Grid>

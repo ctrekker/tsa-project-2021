@@ -9,8 +9,9 @@ router.use(requireAuth);
 router.get('/', async (req, res) => {
     res.jsonDb(await req.conn.queryAsync(`
     SELECT
-        LP.ID, U.NAME, U.PICTURE, LP.CONTENT, LP.CREATED_AT,
-        (SELECT COUNT(*) FROM LOBBY_POST_LIKE WHERE POST = LP.ID) AS LIKES
+        LP.ID, U.NAME AS AUTHOR_NAME, U.ID AS AUTHOR_ID, U.PICTURE AS AUTHOR_PICTURE, LP.CONTENT, LP.CREATED_AT,
+        (SELECT COUNT(*) FROM LOBBY_POST_LIKE WHERE POST = LP.ID) AS LIKES,
+        (SELECT COUNT(*) FROM LOBBY_POST WHERE PARENT = LP.ID) AS REPLY_COUNT
     FROM
         LOBBY_POST AS LP
             LEFT JOIN
@@ -25,8 +26,9 @@ router.get('/:postId/', async (req, res) => {
     
     const sql = `
     SELECT
-        LP.ID, U.NAME, U.PICTURE, LP.CONTENT, LP.CREATED_AT,
-        (SELECT COUNT(*) FROM LOBBY_POST_LIKE WHERE POST = LP.ID) AS LIKES
+        LP.ID, U.NAME AS AUTHOR_NAME, U.ID AS AUTHOR_ID, U.PICTURE AS AUTHOR_PICTURE, LP.CONTENT, LP.CREATED_AT,
+        (SELECT COUNT(*) FROM LOBBY_POST_LIKE WHERE POST = LP.ID) AS LIKES,
+        (SELECT COUNT(*) FROM LOBBY_POST WHERE PARENT = LP.ID) AS REPLY_COUNT
     FROM
         LOBBY_POST AS LP
             LEFT JOIN
@@ -66,8 +68,12 @@ router.post('/', async (req, res) => {
 
 //like a post
 router.post('/:postId/like/', async (req, res) => {
-    const like = await req.conn.queryAsync(`INSERT INTO LOBBY_POST_LIKE (USER, POST) VALUES ((SELECT ID FROM USER WHERE EMAIL=?), ?)`, [req.user.email, req.params.postId]);
-    if(like) res.jsonDb(like)
+    try {
+        const like = await req.conn.queryAsync(`INSERT INTO LOBBY_POST_LIKE (USER, POST) VALUES ((SELECT ID FROM USER WHERE EMAIL=?), ?)`, [req.user.email, req.params.postId]);
+        if(like) res.jsonDb(like)
+    } catch(e) {
+        res.status(400).json({ message: 'cannot like a post more than once' });
+    }
 });
 
 //edit a post

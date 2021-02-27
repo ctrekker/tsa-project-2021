@@ -3,7 +3,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from 'react-router-dom';
 import Lobby from './views/Lobby';
 import Lobbies from './views/Lobbies';
@@ -35,15 +36,7 @@ function App() {
       <div className="App">
         <Switch>
           <Route path="/" exact>
-            <header className="App-header">
-              {/* <div className="g-signin2" data-onsuccess="onSignIn"></div> */}
-              <Link
-                className="App-link"
-                to="/test"
-              >
-                Go to another page
-              </Link>
-            </header>
+            <Redirect to="/landing"/>
           </Route>
           <Route path="/test">
             <p>Very poorly styled second page</p>
@@ -61,8 +54,6 @@ function App() {
           <Route path="/home" exact>
             <Home/>
           </Route>
-
-          { /* TEST ROUTES */ }
           <Route path="/landing">
             <Landing/>
           </Route>

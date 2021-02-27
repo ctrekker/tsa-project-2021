@@ -9,7 +9,7 @@ function kFormatter(num) {
     return num == null ? 0 : num > 999 ? (num/1000).toFixed(1) + 'k' : num
 }
 
-export default function LobbyPreview({NAME, CATEGORY, DESCRIPTION, picture, memberCount, postCount, classCount, rating, ID}){
+export default function LobbyPreview({id: ID, name: NAME, category: CATEGORY, description: DESCRIPTION, picture, memberCount, postCount, classCount, rating}){
     // TODO figure out when to use this
     const [showCategory, setShowCategory] = useState(true);
 
