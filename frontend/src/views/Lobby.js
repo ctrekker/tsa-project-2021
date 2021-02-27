@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Divider, Grid, Typography, IconButton, MenuItem, MenuList, ListItemText, Collapse, Button } from '@material-ui/core';
-import { useParams } from 'react-router-dom';
+import { useParams, withRouter } from 'react-router-dom';
 import ClassPreview from '../components/ClassPreview';
 import FlexCenter from '../components/FlexCenter';
 import LobbyPost from '../components/LobbyPost';
@@ -32,7 +32,7 @@ Or, more preferably, use the built-in interface in VS Code.
 3. Click on the **Pull** button. If it asks whether you want to fast-forward merge or rebase merge, choose rebase (it should only ask this once if ever)
 `
 
-export default function Lobby() {
+function Lobby({ history }) {
     const [descriptionExpanded, setDescriptionExpanded] = useState(true);
     const [lobby, setLobby] = useState({});
     const [lobbyPosts, setLobbyPosts] = useState([]);
@@ -162,10 +162,10 @@ export default function Lobby() {
                             {lobbyClasses.map(lobbyClass => (
                                 <Grid item xs="12">
                                     <ClassPreview
-                                        onClick={() => alert('clicked!')}
+                                        onClick={() => history.push(`/lobby/${id}/class/${lobbyClass.id}`)}
                                         name={lobbyClass.name}
                                         instructor_name={lobbyClass.instructor_name}
-                                        rating={typeof(lobbyClass.rating) != null ? "No Rating" : `${lobbyClass.rating.slice(0, 3)}/5`}
+                                        rating={lobbyClass.rating && `${lobbyClass.rating.slice(0, 3)}/5`}
                                         scheduledFor={moment(lobbyClass.scheduled_for)}/>
                                 </Grid>
                             ))}
@@ -181,3 +181,5 @@ export default function Lobby() {
         </Container>
     );
 }
+
+export default withRouter(Lobby);

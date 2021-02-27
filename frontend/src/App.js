@@ -52,7 +52,7 @@ function App() {
               description="Studying the analysis of continuous changes in mathematical functions. More specifically, this lobby refers to differential calculus."
             />
           </Route>
-          <Route exact path="/lobby/:lobbyid/class/:classid">
+          <Route exact path="/lobby/:lobbyId/class/:classId">
             <ClassView/>
           </Route>
           <Route path="/home" exact>

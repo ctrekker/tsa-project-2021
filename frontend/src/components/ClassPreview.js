@@ -18,7 +18,7 @@ export default function ClassPreview(props) {
                 <div className="container">
                     <div className="left">
                         <Typography variant="subtitle1" className="ttext" style={{marginTop: 0}}>{CLASS_NAME}</Typography>
-                        <Typography variant="p" id="author">by {INSTRUCTOR_NAME} {CLASS_RATING && ({CLASS_RATING})}</Typography>
+                        <Typography variant="p" id="author">by {INSTRUCTOR_NAME} {CLASS_RATING && <>({CLASS_RATING})</>}</Typography>
                     </div>
 
                     <div style={{flexGrow: 1}}/>
