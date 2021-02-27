@@ -38,8 +38,8 @@ export default function Lobby() {
     const { name='', description='Loading...' } = lobby;
     let { id } = useParams();
 
-    const lobbyPostsLeft = [];
-    const lobbyPostsRight = [];
+    const lobbyPostsLeft = lobbyPosts.slice(0, Math.ceil(lobbyPosts.length / 2));
+    const lobbyPostsRight = lobbyPosts.slice(Math.ceil(lobbyPosts.length / 2), lobbyPosts.length);
 
     useEffect(() => {
         function handleScroll(e) {
@@ -103,6 +103,9 @@ export default function Lobby() {
                                     likes={post.likes}
                                     content={post.content || ''}/>
                             ))}
+                            {lobbyPostsLeft.length === 0 && (
+                                <i>There are no posts in this lobby yet. Be the first!</i>
+                            )}
                         </Grid>
                         <Grid item xs="6">
                             {lobbyPostsRight.map(post => (
