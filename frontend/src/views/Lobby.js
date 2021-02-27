@@ -165,7 +165,7 @@ export default function Lobby() {
                                         onClick={() => alert('clicked!')}
                                         name={lobbyClass.name}
                                         instructor_name={lobbyClass.instructor_name}
-                                        rating={`${lobbyClass.rating.slice(0, 3)}/5`}
+                                        rating={typeof(lobbyClass.rating) != null ? "No Rating" : `${lobbyClass.rating.slice(0, 3)}/5`}
                                         scheduledFor={moment(lobbyClass.scheduled_for)}/>
                                 </Grid>
                             ))}
