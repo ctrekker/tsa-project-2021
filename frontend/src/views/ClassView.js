@@ -87,7 +87,7 @@ export default function ClassView(props) {
 
     return (
         <Container maxWidth="md" style={{marginTop: 20}}>
-            <div style={{position: 'sticky', top: -10, paddingTop: 10, zIndex: 100, background: 'white'}}>
+            <div style={{position: 'sticky', top: -10, paddingTop: 10, marginBottom: 10, zIndex: 100, background: 'white', marginLeft: -10, marginRight: -10}}>
                 <FlexCenter>
                     <div>
                         <Typography variant="h4">{lobbyClass.name}</Typography>
@@ -96,7 +96,7 @@ export default function ClassView(props) {
                         </Collapse>
                     </div>
                     <div style={{flexGrow: 1}}/>
-                    <Button onClick={handleRegisterUnregister} variant="contained" color={lobbyClass.is_member === 0 ? 'primary' : 'secondary'} size={lobbyClass.is_member === 0 ? 'large' : 'small'}>{ lobbyClass.is_member === 0 ? 'Register' : 'Unregister' }</Button>
+                    <Button onClick={handleRegisterUnregister} variant="contained" color={lobbyClass.is_member === 0 ? 'primary' : 'secondary'} size={lobbyClass.is_member === 0 ? 'large' : 'small'} style = {{margin:10}}>{ lobbyClass.is_member === 0 ? 'Register' : 'Unregister' }</Button>
                 </FlexCenter>
                 <Divider/>
             </div>
