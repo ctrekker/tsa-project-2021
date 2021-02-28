@@ -45,7 +45,7 @@ export default function Lobbies() {
     const [categories, setCategories] = useState([]);
     const [lobbies, setLobbies] = useState([]);
     const [lobbiesVersion, setLobbiesVersion] = useState(0);
-    const [addLobbyOpen, setAddLobbyOpen] = useState(true);
+    const [addLobbyOpen, setAddLobbyOpen] = useState(false);
 
     function handleAddLobby() {
         setAddLobbyOpen(true);
