@@ -29,7 +29,7 @@ router.get('/:id/posts', requireAuth, async (req, res) => {
         WHERE P.AUTHOR = ?
         ORDER BY P.CREATED_AT DESC
         LIMIT 100
-    `, [req.user.id]);
+    `, [req.params.id]);
     res.jsonDb(posts);
 });
 router.post('/', async (req, res) => {
