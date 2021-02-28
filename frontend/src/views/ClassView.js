@@ -5,22 +5,28 @@ import Config from "../Config"
 import { Typography, Grid, Container, Divider, Button, Collapse, IconButton } from "@material-ui/core";
 import FlexCenter from '../components/FlexCenter';
 import AddIcon from '@material-ui/icons/Add';
+import ClassComment from "../components/ClassComment";
+import CreateCommentDialog from "../components/CreateCommentDialog"
 
 export default function ClassView(props) {
+    const [addCommentOpen, setAddCommentOpen] = useState(false);
+    const [addAnnouncementOpen, setAddAnnouncementOpen] = useState(false);
+
     const { lobbyId, classId } = useParams();
     
     const [lobbyClass, setLobbyClass] = useState({});
     const [descriptionExpanded, setDescriptionExpanded] = useState(true);
 
     function handleRegisterUnregister() {
-        // TODO: Integrate!!!
-    }
-
-    function handleAddAnnouncement() {
-        // TODO: Integrate!!!
-    }
-    function handleAddComment() {
-        // TODO: Integrate!!!
+        fetch(Config.endpoint('/lobbies/' + lobbyId + '/classes/' + classId + '/' + (lobbyClass.is_member == 0 ? 'join' : 'leave') + '/'), {
+            method: 'POST'
+        }).then(res => res.json())
+        .then(res => {
+            setLobbyClass(res)
+            console.log(lobbyClass)
+        }).catch(err => {
+            if(err) console.log(err);
+        });    
     }
 
     useEffect(() => {
@@ -51,7 +57,33 @@ export default function ClassView(props) {
         });
     }, [lobbyId, classId]);
 
-    console.log(lobbyClass);
+    const [announcements, setAnnouncements] = useState([]);
+
+    useEffect(() => {
+        fetch(Config.endpoint('/lobbies/' + lobbyId + '/classes/' + classId + '/comments/?highlighted=true'), {
+            method: 'GET',
+            credentials: 'include'
+        }).then(res => res.json())
+        .then(res => {
+            setAnnouncements(res);
+        }).catch(err => {
+            if(err) console.log(err);
+        });
+    }, [addAnnouncementOpen, setAnnouncements]);
+
+    const [comments, setComments] = useState([]);
+
+    useEffect(() => {
+        fetch(Config.endpoint('/lobbies/' + lobbyId + '/classes/' + classId + '/comments/'), {
+            method: 'GET',
+            credentials: 'include'
+        }).then(res => res.json())
+        .then(res => {
+            setComments(res);
+        }).catch(err => {
+            if(err) console.log(err);
+        });
+    }, [addCommentOpen, setComments]);
 
     return (
         <Container maxWidth="md" style={{marginTop: 20}}>
@@ -74,25 +106,35 @@ export default function ClassView(props) {
                     <FlexCenter>
                         <Typography variant="h5">Announcements</Typography>
                         <div style={{flexGrow: 1}}/>
-                        <IconButton onClick={handleAddAnnouncement}><AddIcon fontSize="large"/></IconButton>
+                        <IconButton onClick={()=>setAddAnnouncementOpen(true)}><AddIcon fontSize="large"/></IconButton>
                     </FlexCenter>
                     <Divider/>
                     <div>
-
+                        {announcements.map((announcement, i) => ((
+                            <Grid item>
+                                <ClassComment {...announcement}/>
+                            </Grid>
+                    )))}
                     </div>
                 </div>
                 <div>
                     <FlexCenter>
                         <Typography variant="h5">Discussion</Typography>
                         <div style={{flexGrow: 1}}/>
-                        <IconButton onClick={handleAddComment}><AddIcon fontSize="large"/></IconButton>
+                        <IconButton onClick={()=>setAddCommentOpen(true)}><AddIcon fontSize="large"/></IconButton>
                     </FlexCenter>
                     <Divider/>
                     <div>
-
+                        {comments.map((comment, i) => ((
+                                <Grid item>
+                                    <ClassComment {...comment}/>
+                                </Grid>
+                        )))}
                     </div>
                 </div>
             </div>
+            <CreateCommentDialog open={addCommentOpen} onClose={() => setAddCommentOpen(false)} type = "Comment" lobbyId = {lobbyId} classId = {classId}/>
+            <CreateCommentDialog open={addAnnouncementOpen} onClose={() => setAddAnnouncementOpen(false)} type = "Announcement" lobbyId = {lobbyId} classId = {classId}/>
         </Container>
     )
 }
