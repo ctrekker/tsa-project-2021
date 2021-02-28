@@ -8,7 +8,7 @@ export default function ProfilePicture({ url }) {
             borderRadius: 50,
             boxShadow: '#00000017 0px 3px 5px 0',
             border: '2px solid #d5d5d5',
-            background: `url(${url})`,
+            backgroundImage: `url(${url})`,
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat'
         }}/>
