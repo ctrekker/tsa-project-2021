@@ -16,6 +16,22 @@ router.get('/:id', requireAuth, async (req, res) => {
         res.status(404).send('ERROR: User not found');
     }
 });
+router.get('/:id/posts', requireAuth, async (req, res) => {
+    const posts = await req.conn.queryAsync(`
+        SELECT P.ID, P.CONTENT, P.CREATED_AT,
+            L.ID AS LOBBY_ID, L.NAME AS LOBBY_NAME,
+            (SELECT COUNT(*) FROM LOBBY_POST_LIKE WHERE POST = P.ID) AS LIKES
+        FROM
+            LOBBY_POST AS P
+                LEFT JOIN
+            LOBBY AS L
+        ON P.LOBBY = L.ID
+        WHERE P.AUTHOR = ?
+        ORDER BY P.CREATED_AT DESC
+        LIMIT 100
+    `, [req.user.id]);
+    res.jsonDb(posts);
+});
 router.post('/', async (req, res) => {
     const ticket = await client.verifyIdToken({
         idToken: req.body.token,

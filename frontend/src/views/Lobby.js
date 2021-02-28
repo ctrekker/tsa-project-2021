@@ -51,8 +51,11 @@ function Lobby({ history }) {
     const { name='', description='Loading...' } = lobby;
     let { id } = useParams();
 
-    const lobbyPostsLeft = lobbyPosts.slice(0, Math.floor(lobbyPosts.length / 2));
-    const lobbyPostsRight = lobbyPosts.slice(Math.floor(lobbyPosts.length / 2), lobbyPosts.length);
+    const lobbyPostsLeft = []; ///lobbyPosts.slice(0, Math.floor(lobbyPosts.length / 2))
+    const lobbyPostsRight = []; ///lobbyPosts.slice(Math.floor(lobbyPosts.length / 2), lobbyPosts.length)
+    for(let i=0; i<lobbyPosts.length; i++) {
+        (i % 2 === 1 ? lobbyPostsRight : lobbyPostsLeft).push(lobbyPosts[i]);
+    }
 
     function handleJoinLeave() {
         fetch(Config.endpoint(`/lobbies/${id}/${lobby.is_member === 0 ? 'join' : 'leave'}`), {
@@ -195,7 +198,7 @@ function Lobby({ history }) {
                     </Grid>
                 </Grid>
                 <Grid item xs="4" style={{borderLeft: '1px solid lightgrey'}}>
-                    <div style={{position: 'sticky', top: 50, padding: '10px'}}>
+                    <div style={{position: 'sticky', top: 120, padding: '10px'}}>
                         <FlexCenter style={{marginBottom: 15}}>
                             <Typography variant="h5">Upcoming Classes</Typography>
                             <div style={{flexGrow: 1}}/>
