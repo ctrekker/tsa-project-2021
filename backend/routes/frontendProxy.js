@@ -6,6 +6,9 @@ const proxy = httpProxy.createProxyServer({
     target: 'http://localhost:3000',
     ws: true
 });
+proxy.on('error', e => {
+    console.log(e);
+});
 
 router.use((req, res, next) => {
     proxy.web(req, res);

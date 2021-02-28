@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Card, CardContent, Typography} from "@material-ui/core"
+import {Card, CardContent, Typography, Link} from "@material-ui/core"
 import {Link as RouterLink} from 'react-router-dom';
 import ProfilePicture from "./ProfilePicture"
 import moment from "moment"
