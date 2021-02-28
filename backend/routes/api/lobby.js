@@ -85,7 +85,7 @@ router.get('/:lobbyId/image', requireAuth, async(req, res) => {
     const lobbyNameObj = await req.conn.queryAsync('SELECT NAME FROM LOBBY WHERE ID = ?', [lobbyId]);
     let lobbyName = lobbyNameObj[0].NAME;
 
-    if(fs.existsSync('./images')){
+    if(!fs.existsSync('./images')){
         fs.mkdirSync('./images', (err) => {
             if(err) console.log('no images for you');
             else console.log('images directory created');
@@ -112,7 +112,7 @@ router.get('/:lobbyId/image', requireAuth, async(req, res) => {
             }
             const response = await fetch(imageUrl);
             const buffer = await response.buffer();
-            fs.writeFile(`./images/${imageHash}.jpg`, buffer, () => console.log('downloaded and saved new image'));
+            fs.writeFileSync(`./images/${imageHash}.jpg`, buffer, () => console.log('downloaded and saved new image'));
             res.sendFile(path.resolve(imagePath));
             return;
         });

@@ -95,7 +95,7 @@ export default function Lobbies() {
                     <Grid container spacing={3} style={{padding: 20}}>
                         {lobbies.map((lobby, i) => ((
                             <Grid item sm={12} md={6} lg={4}>
-                                <LobbyPreview {...lobby}/>
+                                <LobbyPreview {...lobby} picture={`${Config.endpoint(`/lobbies/${lobby.id}/image`)}`}/>
                             </Grid>
                         )))}
                     </Grid>
