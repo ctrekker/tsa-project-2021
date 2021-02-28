@@ -24,10 +24,10 @@ function CreateCommentDialog({ open, onClose, type, lobbyId, classId }) {
     }
     const content = useRef()
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog open={open} onClose={onClose} fullWidth = "xl">
             <DialogTitle>Create a New {type}</DialogTitle>
             <DialogContent>
-                <TextField inputRef={content} variant="outlined"/>
+                <TextField inputRef={content} variant="outlined" fullWidth = "xl" style = {{minHeight: "30vh"}} fullHeight = "sm"/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary">
