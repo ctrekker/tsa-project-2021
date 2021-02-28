@@ -62,7 +62,7 @@ function App() {
             <Route path="/landing">
               <Landing/>
             </Route>
-            <Route path="/users/:userId">
+            <Route path="/user/:userId">
               <Profile/>
             </Route>
           </Switch>

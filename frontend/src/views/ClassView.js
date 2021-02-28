@@ -7,7 +7,6 @@ import FlexCenter from '../components/FlexCenter';
 import AddIcon from '@material-ui/icons/Add';
 import ClassComment from "../components/ClassComment";
 import CreateCommentDialog from "../components/CreateCommentDialog";
-import Navbar from "../components/Navbar";
 
 export default function ClassView(props) {
     const [addCommentOpen, setAddCommentOpen] = useState(false);
