@@ -37,7 +37,7 @@ function App() {
   return (
       <Router>
         <Navbar/>
-        <div className="App">
+        <div className="App" style={{paddingTop: 25}}>
           <Switch>
             <Route path="/" exact>
               <Redirect to="/landing"/>

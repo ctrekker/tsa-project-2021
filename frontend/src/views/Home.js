@@ -122,14 +122,6 @@ export default function Home(){
 
     return (
         <div>
-            <div style = {{position: "fixed", minWidth: "100%", zIndex: 3}}>
-                <AppBar position="static">
-                    <Toolbar>
-                        <div style={{flexGrow: 1}}/>
-                        <div className="g-signin2"/>
-                    </Toolbar>
-                </AppBar>
-            </div>
             <div id = "scale" className = {showClasses ? "small" : "big"} style = {lobbyPreviewListStyle ? {overflowX: "hidden", overflowY: "hidden", maxWidth: 96 / scaler + "vw"} : {maxWidth: 96 / scaler + "vw"}}>
                 <TextField label="Search Everything" style={{minWidth: "40%", marginLeft: "30%", textAlign: "center", marginTop: "8%"}}/>
                 <LobbyPreviewList lobbies={lobbies} scaler={scaler}/>
