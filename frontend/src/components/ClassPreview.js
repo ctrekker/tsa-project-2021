@@ -8,7 +8,7 @@ export default function ClassPreview(props) {
         name: CLASS_NAME,
         instructor_name: INSTRUCTOR_NAME,
         rating: CLASS_RATING,
-        scheduled_for: SCHEDULED_FOR,
+        scheduledFor: SCHEDULED_FOR,
         onClick
     } = props;
 

@@ -70,7 +70,7 @@ router.get('/', async (req, res) => {
             where = `WHERE M.CLASS = ? AND M.HIGHLIGHTED = 1 `;
         }
 
-        const sql = messageSQL + where + `LIMIT ?, ?`;
+        const sql = messageSQL + where + `ORDER BY M.CREATED_AT DESC LIMIT ?, ?`;
 
         const comments = await req.conn.queryAsync(sql, [classId, offset, limit]);
 
