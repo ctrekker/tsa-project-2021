@@ -146,7 +146,7 @@ function Lobby({ history }) {
                             <Typography variant="body1" color="textSecondary">{description}</Typography>
                         </Collapse>
                     </div>
-                    <Button onClick={handleCreatePost} variant="contained" color="primary" style={{marginLeft: 25}}><PostAddIcon fontSize="small"/>&nbsp;Write Post</Button>
+                    {lobby.is_member === 1 && <Button onClick={handleCreatePost} variant="contained" color="primary" style={{marginLeft: 25}}><PostAddIcon fontSize="small"/>&nbsp;Write Post</Button>}
                     <div style={{flexGrow: 1}}/>
                     <Button onClick={handleJoinLeave} variant="contained" color={lobby.is_member === 0 ? 'primary' : 'secondary'} size={lobby.is_member === 0 ? 'large' : 'small'}>{ lobby.is_member === 0 ? 'Join' : 'Leave' }</Button>
                 </FlexCenter>
@@ -202,7 +202,7 @@ function Lobby({ history }) {
                         <FlexCenter style={{marginBottom: 15}}>
                             <Typography variant="h5">Upcoming Classes</Typography>
                             <div style={{flexGrow: 1}}/>
-                            <Button size="small" variant="contained" color="primary" onClick={() => setCreateClassOpen(true)}><AddIcon fontSize="small"/>&nbsp;Create a Class</Button>
+                            {lobby.is_member === 1 && <Button size="small" variant="contained" color="primary" onClick={() => setCreateClassOpen(true)}><AddIcon fontSize="small"/>&nbsp;Create a Class</Button>}
                         </FlexCenter>
                         <Grid container spacing={2}>
                             {lobbyClasses.map(lobbyClass => (

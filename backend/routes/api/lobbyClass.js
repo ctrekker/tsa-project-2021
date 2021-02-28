@@ -47,7 +47,7 @@ const checkClassId = async (classId, conn, res) => {
 
 //check if a user is a member of a given class
 const checkUserInClass = async (classId, userId, conn) => {
-    const checkUser = await conn.queryAsync('SELECT ID FROM CLASS_MEMBER WHERE CLASS = ? AND MEMBER = ?', [classId, userId]);
+    const checkUser = await conn.queryAsync('SELECT ID FROM CLASS_MEMBER WHERE CLASS = ? AND MEMBER = ? AND MEMBER != (SELECT INSTRUCTOR FROM LOBBY_CLASS WHERE ID = ?)', [classId, userId, classId]);
     return checkUser.length;
 }
 
@@ -79,7 +79,7 @@ router.get('/', async (req, res) => {
         const checkLobby = await checkForLobby(lobbyId, req.conn);
         if(checkLobby.length<1){ userErrorHandler('invalid lobby id', res); return; }
 
-        const sql = classQuery + `WHERE C.LOBBY = ? ORDER BY C.SCHEDULED_FOR LIMIT ?, ?`;
+        const sql = classQuery + `WHERE C.LOBBY = ? AND C.SCHEDULED_FOR > NOW() ORDER BY C.SCHEDULED_FOR LIMIT ?, ?`;
         const classArray = await req.conn.queryAsync(sql, [req.user.id, lobbyId, offset, limit]);
 
         res.jsonDb(classArray);
@@ -93,7 +93,7 @@ router.get('/:classId/', async (req, res) => {
     const classId = req.params.classId;
 
     try{
-        const sqlClass = classQuery + 'WHERE C.ID = ?';
+        const sqlClass = classQuery + 'WHERE C.ID = ? AND C.SCHEDULED_FOR > NOW()';
         const classRes = await req.conn.queryAsync(sqlClass, [req.user.id, classId]);
         if(classRes.length<1){ userErrorHandler('invalid class id', res); return; }
 
@@ -212,7 +212,7 @@ router.post('/:classId/leave/', async (req, res) => {
         const checkClass = await checkClassId(classId, req.conn, res);
         if(!checkClass){ return; }
         const userLength = await checkUserInClass(classId, userId, req.conn);
-        if(userLength<1){ userErrorHandler('user is not a member of this class', res); return; }
+        if(userLength<1){ res.jsonDb(checkClass[0]); return; }
 
         const sql = 'DELETE FROM CLASS_MEMBER WHERE CLASS = ? AND MEMBER = ?';
         const okPacket = await req.conn.queryAsync(sql, [classId, userId]);

@@ -23,7 +23,7 @@ export default function ClassView(props) {
         }).then(res => res.json())
         .then(res => {
             setLobbyClass(res)
-            console.log(lobbyClass)
+            console.log(res)
         }).catch(err => {
             if(err) console.log(err);
         });    
