@@ -14,6 +14,7 @@ import Landing from './views/Landing';
 import Home from './views/Home';
 import ClassView from "./views/ClassView";
 import Navbar from './components/Navbar';
+import Profile from './views/Profile';
 
 function App() {
   function onSignIn(googleUser) {
@@ -60,6 +61,9 @@ function App() {
             </Route>
             <Route path="/landing">
               <Landing/>
+            </Route>
+            <Route path="/users/:userId">
+              <Profile/>
             </Route>
           </Switch>
         </div>
