@@ -6,7 +6,8 @@ import { Typography, Grid, Container, Divider, Button, Collapse, IconButton } fr
 import FlexCenter from '../components/FlexCenter';
 import AddIcon from '@material-ui/icons/Add';
 import ClassComment from "../components/ClassComment";
-import CreateCommentDialog from "../components/CreateCommentDialog"
+import CreateCommentDialog from "../components/CreateCommentDialog";
+import Navbar from "../components/Navbar";
 
 export default function ClassView(props) {
     const [addCommentOpen, setAddCommentOpen] = useState(false);
@@ -86,55 +87,57 @@ export default function ClassView(props) {
     }, [addCommentOpen, setComments]);
 
     return (
-        <Container maxWidth="md" style={{marginTop: 20}}>
-            <div style={{position: 'sticky', top: -10, paddingTop: 10, marginBottom: 10, zIndex: 100, background: 'white', marginLeft: -10, marginRight: -10}}>
-                <FlexCenter>
-                    <div>
-                        <Typography variant="h4">{lobbyClass.name}</Typography>
-                        <Collapse in={descriptionExpanded}>
-                            <Typography variant="body1" color="textSecondary">{lobbyClass.description}</Typography>
-                        </Collapse>
-                    </div>
-                    <div style={{flexGrow: 1}}/>
-                    <Button onClick={handleRegisterUnregister} variant="contained" color={lobbyClass.is_member === 0 ? 'primary' : 'secondary'} size={lobbyClass.is_member === 0 ? 'large' : 'small'} style = {{margin:10}}>{ lobbyClass.is_member === 0 ? 'Register' : 'Unregister' }</Button>
-                </FlexCenter>
-                <Divider/>
-            </div>
-                
-            <div className="content-section">
-                <div>
+        <div>
+            <Container maxWidth="md" style={{marginTop: 20}}>
+                <div style={{position: 'sticky', top: 60, paddingTop: 10, marginBottom: 10, zIndex: 5, background: 'white', marginLeft: -10, marginRight: -10}}>
                     <FlexCenter>
-                        <Typography variant="h5">Announcements</Typography>
+                        <div>
+                            <Typography variant="h4">{lobbyClass.name}</Typography>
+                            <Collapse in={descriptionExpanded}>
+                                <Typography variant="body1" color="textSecondary">{lobbyClass.description}</Typography>
+                            </Collapse>
+                        </div>
                         <div style={{flexGrow: 1}}/>
-                        <IconButton onClick={()=>setAddAnnouncementOpen(true)}><AddIcon fontSize="large"/></IconButton>
+                        <Button onClick={handleRegisterUnregister} variant="contained" color={lobbyClass.is_member === 0 ? 'primary' : 'secondary'} size={lobbyClass.is_member === 0 ? 'large' : 'small'} style = {{margin:10}}>{ lobbyClass.is_member === 0 ? 'Register' : 'Unregister' }</Button>
                     </FlexCenter>
                     <Divider/>
-                    <div>
-                        {announcements.map((announcement, i) => ((
-                            <Grid item>
-                                <ClassComment {...announcement}/>
-                            </Grid>
-                    )))}
-                    </div>
                 </div>
-                <div>
-                    <FlexCenter>
-                        <Typography variant="h5">Discussion</Typography>
-                        <div style={{flexGrow: 1}}/>
-                        <IconButton onClick={()=>setAddCommentOpen(true)}><AddIcon fontSize="large"/></IconButton>
-                    </FlexCenter>
-                    <Divider/>
+                    
+                <div className="content-section" style = {{marginTop: 50}}>
                     <div>
-                        {comments.map((comment, i) => ((
+                        <FlexCenter>
+                            <Typography variant="h5">Announcements</Typography>
+                            <div style={{flexGrow: 1}}/>
+                            <IconButton onClick={()=>setAddAnnouncementOpen(true)}><AddIcon fontSize="large"/></IconButton>
+                        </FlexCenter>
+                        <Divider/>
+                        <div>
+                            {announcements.map((announcement, i) => ((
                                 <Grid item>
-                                    <ClassComment {...comment}/>
+                                    <ClassComment {...announcement}/>
                                 </Grid>
                         )))}
+                        </div>
+                    </div>
+                    <div>
+                        <FlexCenter>
+                            <Typography variant="h5">Discussion</Typography>
+                            <div style={{flexGrow: 1}}/>
+                            <IconButton onClick={()=>setAddCommentOpen(true)}><AddIcon fontSize="large"/></IconButton>
+                        </FlexCenter>
+                        <Divider/>
+                        <div>
+                            {comments.map((comment, i) => ((
+                                    <Grid item>
+                                        <ClassComment {...comment}/>
+                                    </Grid>
+                            )))}
+                        </div>
                     </div>
                 </div>
-            </div>
-            <CreateCommentDialog open={addCommentOpen} onClose={() => setAddCommentOpen(false)} type = "Comment" lobbyId = {lobbyId} classId = {classId}/>
-            <CreateCommentDialog open={addAnnouncementOpen} onClose={() => setAddAnnouncementOpen(false)} type = "Announcement" lobbyId = {lobbyId} classId = {classId}/>
-        </Container>
+                <CreateCommentDialog open={addCommentOpen} onClose={() => setAddCommentOpen(false)} type = "Comment" lobbyId = {lobbyId} classId = {classId}/>
+                <CreateCommentDialog open={addAnnouncementOpen} onClose={() => setAddAnnouncementOpen(false)} type = "Announcement" lobbyId = {lobbyId} classId = {classId}/>
+            </Container>
+        </div>
     )
 }

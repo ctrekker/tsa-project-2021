@@ -12,6 +12,7 @@ import Config from './Config';
 import Landing from './views/Landing';
 import Home from './views/Home';
 import ClassView from "./views/ClassView";
+import Navbar from './components/Navbar';
 
 function App() {
   function onSignIn(googleUser) {
@@ -35,6 +36,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Navbar/>
         <Switch>
           <Route path="/" exact>
             <Redirect to="/landing"/>
