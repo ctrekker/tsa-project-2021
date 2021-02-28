@@ -8,6 +8,7 @@ router.use(db);
 
 // Note that each route is *plural* to stay RESTful
 router.use('/users', require('./api/user'));
+router.use('/categories', require('./api/category'));
 router.use('/lobbies', require('./api/lobby'));
 router.use('/classes', requireAuth, require('./api/class'));
 router.use('/lobbies/:lobbyId/classes', requireAuth, require('./api/lobbyClass'));
