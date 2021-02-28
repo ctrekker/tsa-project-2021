@@ -6,6 +6,9 @@ import {
   Link,
   Redirect
 } from 'react-router-dom';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+
 import Lobby from './views/Lobby';
 import Lobbies from './views/Lobbies';
 import Config from './Config';
@@ -33,37 +36,36 @@ function App() {
   window.onSignIn = onSignIn;
 
   return (
-    <Router>
-      <div className="App">
-        <Switch>
-          <Route path="/" exact>
-            <Redirect to="/landing"/>
-          </Route>
-          <Route path="/test">
-            <p>Very poorly styled second page</p>
-            <Link to="/">Go back home</Link>
-          </Route>
-          <Route exact path="/lobbies">
-            <Lobbies/>
-          </Route>
-          <Route exact path="/lobby/:id">
-            <Lobby
-              name="Calculus"
-              description="Studying the analysis of continuous changes in mathematical functions. More specifically, this lobby refers to differential calculus."
-            />
-          </Route>
-          <Route exact path="/lobby/:lobbyId/class/:classId">
-            <ClassView/>
-          </Route>
-          <Route path="/home" exact>
-            <Home/>
-          </Route>
-          <Route path="/landing">
-            <Landing/>
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Router>
+        <div className="App">
+          <Switch>
+            <Route path="/" exact>
+              <Redirect to="/landing"/>
+            </Route>
+            <Route path="/test">
+              <p>Very poorly styled second page</p>
+              <Link to="/">Go back home</Link>
+            </Route>
+            <Route exact path="/lobbies">
+              <Lobbies/>
+            </Route>
+            <Route exact path="/lobby/:id">
+              <Lobby/>
+            </Route>
+            <Route exact path="/lobby/:lobbyId/class/:classId">
+              <ClassView/>
+            </Route>
+            <Route path="/home" exact>
+              <Home/>
+            </Route>
+            <Route path="/landing">
+              <Landing/>
+            </Route>
+          </Switch>
+        </div>
+      </Router>
+    </MuiPickersUtilsProvider>
   );
 }
 

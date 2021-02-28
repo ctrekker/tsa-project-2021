@@ -7,6 +7,8 @@ import LobbyPost from '../components/LobbyPost';
 import './Lobby.css';
 import moment from 'moment';
 import Config from '../Config';
+import AddIcon from '@material-ui/icons/Add';
+import CreateClassDialog from '../components/CreateClassDialog';
 
 const sampleContent = `
 # Meeting Notes 1/31/2021
@@ -41,6 +43,8 @@ function Lobby({ history }) {
     const [lobbyPostsVersion, setLobbyPostsVersion] = useState(0);
     const [lobbyClassesVersion, setLobbyClassesVersion] = useState(0);
 
+    const [createClassOpen, setCreateClassOpen] = useState(false);
+
     const { name='', description='Loading...' } = lobby;
     let { id } = useParams();
 
@@ -58,6 +62,10 @@ function Lobby({ history }) {
             .catch(res => {
                 console.log(res);
             });
+    }
+    function handleCreateClassClose() {
+        setLobbyClassesVersion(lobbyClassesVersion + 1);
+        setCreateClassOpen(false);
     }
 
     useEffect(() => {
@@ -158,6 +166,11 @@ function Lobby({ history }) {
                 </Grid>
                 <Grid item xs="4" style={{borderLeft: '1px solid lightgrey'}}>
                     <div style={{position: 'sticky', top: 50, padding: '10px'}}>
+                        <FlexCenter style={{marginBottom: 15}}>
+                            <Typography variant="h5">Upcoming Classes</Typography>
+                            <div style={{flexGrow: 1}}/>
+                            <Button size="small" variant="contained" color="primary" onClick={() => setCreateClassOpen(true)}><AddIcon fontSize="small"/>&nbsp;Create a Class</Button>
+                        </FlexCenter>
                         <Grid container spacing={2}>
                             {lobbyClasses.map(lobbyClass => (
                                 <Grid item xs="12">
@@ -178,6 +191,7 @@ function Lobby({ history }) {
                     </div>
                 </Grid>
             </Grid>
+            <CreateClassDialog open={createClassOpen} onClose={handleCreateClassClose}/>
         </Container>
     );
 }

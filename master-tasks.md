@@ -1,4 +1,3 @@
-* Get is_member of class working
 * Lobby images do a google images thing
 * Create a post
 * Show meeting link on each class

@@ -79,7 +79,7 @@ router.get('/', async (req, res) => {
         const checkLobby = await checkForLobby(lobbyId, req.conn);
         if(checkLobby.length<1){ userErrorHandler('invalid lobby id', res); return; }
 
-        const sql = classQuery + `WHERE C.LOBBY = ? LIMIT ?, ?`;
+        const sql = classQuery + `WHERE C.LOBBY = ? ORDER BY C.SCHEDULED_FOR LIMIT ?, ?`;
         const classArray = await req.conn.queryAsync(sql, [req.user.id, lobbyId, offset, limit]);
 
         res.jsonDb(classArray);

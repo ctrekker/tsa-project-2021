@@ -1,7 +1,7 @@
 import React from 'react';
 
-const FlexCenter = ({ children }) => ((
-    <div style={{display: 'flex', alignItems: 'center'}}>
+const FlexCenter = ({ children, style={} }) => ((
+    <div style={{display: 'flex', alignItems: 'center', ...style}}>
         {children}
     </div>
 ));
