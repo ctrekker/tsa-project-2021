@@ -7,6 +7,9 @@ router.use(requireAuth);
 
 //get all posts from lobby
 router.get('/', async (req, res) => {
+    const offset = parseInt(req.query.offset) || 0;
+    const limit = parseInt(req.query.limit) || 100;
+
     res.jsonDb(await req.conn.queryAsync(`
     SELECT
         LP.ID, U.NAME AS AUTHOR_NAME, U.ID AS AUTHOR_ID, U.PICTURE AS AUTHOR_PICTURE, LP.CONTENT, LP.CREATED_AT,
@@ -17,13 +20,17 @@ router.get('/', async (req, res) => {
             LEFT JOIN
         USER AS U
     ON LP.AUTHOR = U.ID
-    WHERE LP.LOBBY = ?
-    `, [req.params.lobbyId]));
+    WHERE LP.LOBBY = ? AND LP.PARENT IS NULL 
+    ORDER BY LP.CREATED_AT DESC 
+    LIMIT ?, ?
+    `, [req.params.lobbyId, offset, limit]));
 });
 
 //get post by id
 router.get('/:postId/', async (req, res) => {
-    
+    const offset = parseInt(req.query.offset) || 0;
+    const limit = parseInt(req.query.limit) || 100;
+
     const sql = `
     SELECT
         LP.ID, U.NAME AS AUTHOR_NAME, U.ID AS AUTHOR_ID, U.PICTURE AS AUTHOR_PICTURE, LP.CONTENT, LP.CREATED_AT,
@@ -37,8 +44,24 @@ router.get('/:postId/', async (req, res) => {
     WHERE LP.LOBBY = ? AND LP.ID = ?
     `;
     const post = await req.conn.queryAsync(sql, [req.params.lobbyId, req.params.postId]);
-    post.subposts = await req.conn.queryAsync('SELECT * FROM LOBBY_POST WHERE PARENT = ?', [post.ID]);
-    res.jsonDb(post);
+
+    const subpostSql = `
+    SELECT 
+        LP.ID, 
+        U.NAME AS AUTHOR_NAME, 
+        U.PICTURE AUTHOR_PICTURE, 
+        U.ID AS AUTHOR_ID, 
+        LP.CLASS AS CLASS_ID, 
+        LP.CONTENT, 
+        LP.CREATED_AT
+    FROM LOBBY_POST AS LP 
+    JOIN USER AS U ON LP.AUTHOR = U.ID
+    WHERE LP.PARENT = ? 
+    ORDER BY LP.CREATED_AT 
+    LIMIT ?, ?
+    `;
+    const subposts = await req.conn.queryAsync(subpostSql, [post[0].ID, offset, limit]);
+    res.jsonDb({ ...post[0], subposts: subposts.map(x => res.objDb(x)) });
 });
 
 //Creates a post and returns the new post json object
