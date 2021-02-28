@@ -4,6 +4,10 @@ const getDb = require('../../db');
 const router = express.Router();
 const mysql = require('mysql');
 const {requireAuth, issue, verify} = require('../../auth');
+const fs = require('fs');
+const crypto = require('crypto');
+const fetch = require('node-fetch');
+const path = require('path');
 
 /*
 _________________
@@ -73,6 +77,45 @@ router.get('/:lobbyId', requireAuth, async(req,res) => {
     
     if (lobby) return res.jsonDb(lobby);
     return res.status(404).send();
+})
+
+router.get('/:lobbyId/image', requireAuth, async(req, res) => {
+    const lobbyId = req.params.lobbyId;
+
+    const lobbyNameObj = await req.conn.queryAsync('SELECT NAME FROM LOBBY WHERE ID = ?', [lobbyId]);
+    let lobbyName = lobbyNameObj[0].NAME;
+
+    if(fs.existsSync('./images')){
+        fs.mkdirSync('./images', (err) => {
+            if(err) console.log('no images for you');
+            else console.log('images directory created');
+        })
+    }
+
+    let imageHash = crypto.createHash('md5').update(lobbyName.toLowerCase()).digest("hex");
+    let imagePath = `./images/${imageHash}.jpg`;
+    if(fs.existsSync(imagePath)){
+        res.sendFile(path.resolve(imagePath));
+        return;
+    }
+    
+    fetch(`https://api.unsplash.com/search/photos/?query=${lobbyName}`, {
+        method: 'GET',
+        headers: { 'Authorization': 'Client-ID '+process.env.UNSPLASH_KEY }
+    })
+        .then(res => res.json())
+        .then(async (json) => {
+            let imageUrl = json.results[0].urls.thumb;
+            if(!imageUrl){
+                res.json({ error: 'no image for you' });
+                return;
+            }
+            const response = await fetch(imageUrl);
+            const buffer = await response.buffer();
+            fs.writeFile(`./images/${imageHash}.jpg`, buffer, () => console.log('downloaded and saved new image'));
+            res.sendFile(path.resolve(imagePath));
+            return;
+        });
 })
 
 
