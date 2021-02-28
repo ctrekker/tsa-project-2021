@@ -75,12 +75,12 @@ export default function LobbyPost({ lobbyId, id, author, createdAt, content, edi
                 )}
                 {!editable && (
                     <Typography variant="body2" component="div" style={{textAlign: 'left'}}>
-                    <ReactMarkdown style={{display: 'inline'}}>
-                        {expandedContent ? content : content.substring(0, maxContentLength)}
-                    </ReactMarkdown>
-                    {content.length > maxContentLength &&
-                        <Link href="#" onClick={() => setExpandedContent(!expandedContent)}>{expandedContent ? 'less...' : 'more...'}</Link>
-                    }
+                        <ReactMarkdown style={{display: 'inline'}}>
+                            {expandedContent ? content : (content || '').substring(0, maxContentLength)}
+                        </ReactMarkdown>
+                        {content && content.length > maxContentLength &&
+                            <Link href="javascript:;" onClick={() => setExpandedContent(!expandedContent)}>{expandedContent ? 'less...' : 'more...'}</Link>
+                        }
                     </Typography>
                 )}
 

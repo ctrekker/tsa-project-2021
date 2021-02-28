@@ -83,7 +83,7 @@ export default function ClassView(props) {
         }).catch(err => {
             if(err) console.log(err);
         });
-    }, [addCommentOpen, setComments]);
+    }, [addCommentOpen, addAnnouncementOpen, setComments]);
 
     return (
         <div>
@@ -111,11 +111,14 @@ export default function ClassView(props) {
                         </FlexCenter>
                         <Divider/>
                         <div>
-                            {announcements.map((announcement, i) => ((
-                                <Grid item>
-                                    <ClassComment {...announcement}/>
-                                </Grid>
-                        )))}
+                            {announcements.map((announcement, i) => {
+                                announcement.highlighted = false;
+                                return (
+                                    <Grid item>
+                                        <ClassComment {...announcement}/>
+                                    </Grid>
+                                );
+                            })}
                         </div>
                     </div>
                     <div>

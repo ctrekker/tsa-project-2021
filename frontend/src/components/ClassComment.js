@@ -5,17 +5,17 @@ import ProfilePicture from "./ProfilePicture"
 import moment from "moment"
 import ReactMarkdown from 'react-markdown';
 
-function ClassComment({ name, picture, content, user_id, created_at, maxContentLength = 250 }) {
+function ClassComment({ name, picture, content, user_id, highlighted, created_at, maxContentLength = 250 }) {
     const [expandedContent, setExpandedContent] = useState(false);
     
     return (
-<           Card style={{marginBottom: 25}}>
+        <Card style={{marginBottom: 25, ...(highlighted ? {backgroundColor: '#f7e6af3b'} : {})}}>
             <CardContent>
                 <RouterLink className="userLink" to={`/user/${user_id}`}>
                     <ProfilePicture url={picture || 'https://lh3.googleusercontent.com/a-/AOh14GjGp4Umv1QrrFtqqOHUbSbMAulx7XhYJh_Q4esNfA=s96-c'}/>
                     <div style={{marginLeft: 10}}>
                         <Typography variant="h6">{name}</Typography>
-                        <Typography variant="body2" color="textSecondary">{moment([created_at]).fromNow()}</Typography>
+                        <Typography variant="body2" color="textSecondary">{moment(created_at).fromNow()}</Typography>
                     </div>
                 </RouterLink>
             
