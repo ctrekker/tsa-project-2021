@@ -7,6 +7,7 @@ import FlexCenter from '../components/FlexCenter';
 import AddIcon from '@material-ui/icons/Add';
 import ClassComment from "../components/ClassComment";
 import CreateCommentDialog from "../components/CreateCommentDialog";
+import moment from "moment";
 
 export default function ClassView(props) {
     const [addCommentOpen, setAddCommentOpen] = useState(false);
@@ -85,6 +86,8 @@ export default function ClassView(props) {
         });
     }, [addCommentOpen, addAnnouncementOpen, setComments]);
 
+    const [copied, setCopied] = useState(false)
+    console.log(lobbyClass)
     return (
         <div>
             <Container maxWidth="md" style={{marginTop: 20}}>
@@ -100,6 +103,13 @@ export default function ClassView(props) {
                         <Button onClick={handleRegisterUnregister} variant="contained" color={lobbyClass.is_member === 0 ? 'primary' : 'secondary'} size={lobbyClass.is_member === 0 ? 'large' : 'small'} style = {{margin:10}}>{ lobbyClass.is_member === 0 ? 'Register' : 'Unregister' }</Button>
                     </FlexCenter>
                     <Divider/>
+                    <Collapse in={descriptionExpanded}>
+                        <div style = {{display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+                            <Typography variant = "h6">Scheduled for: {moment(lobbyClass.scheduled_for).format('MMM Do') + ' | ' + moment(lobbyClass.scheduled_for).format('h:mm A')}</Typography>
+                            <Button onClick={()=>{window.open(lobbyClass.meeting_link, '_blank'); setCopied(true)}}variant="contained" color={copied ? 'primary' : 'secondary'} size={copied === 0 ? 'large' : 'small'} style = {{margin:10}}>{copied ? "Meeting Opened in New Tab" : "Link to meeting" }</Button>
+                        </div>
+                        <Divider/>
+                    </Collapse>
                 </div>
                     
                 <div className="content-section" style = {{marginTop: 50}}>
