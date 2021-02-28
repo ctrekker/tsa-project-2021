@@ -9,7 +9,7 @@ function kFormatter(num) {
     return num == null ? 0 : num > 999 ? (num/1000).toFixed(1) + 'k' : num
 }
 
-export default function LobbyPreview({id: ID, name: NAME, category: CATEGORY, description: DESCRIPTION, picture, memberCount, postCount, classCount, rating}){
+export default function LobbyPreview({id: ID, name: NAME, category: CATEGORY, description: DESCRIPTION, picture, member_count: memberCount, post_count: postCount, class_count: classCount, rating}){
     // TODO figure out when to use this
     const [showCategory, setShowCategory] = useState(true);
 
@@ -48,11 +48,6 @@ export default function LobbyPreview({id: ID, name: NAME, category: CATEGORY, de
                         <div style={{display: 'flex', justifyContent: 'center'}}>
                         <SvgIcon component={Person} style = {{margin: 5}}/>
                             <Typography variant="p" component="span" style={{marginTop: 'auto', marginBottom: 'auto'}}>{formattedMemberCount}</Typography>
-                        </div>
-                        {/* TODO add default rating value or placeholder until rating available */}
-                        <div style={{display: 'flex', justifyContent: 'center'}}>
-                            <SvgIcon component={Star} style = {{margin: 5}}/>
-                            <Typography variant="p" component="span" style={{marginTop: 'auto', marginBottom: 'auto'}}>{rating}</Typography>
                         </div>
                     </CardActions>
                 </CardActionArea>

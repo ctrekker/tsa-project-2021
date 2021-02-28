@@ -11,10 +11,10 @@ import Config from '../Config';
 const StyledMenuItem = withStyles((theme) => ({
     root: {
         '&:focus': {
-        backgroundColor: theme.palette.primary.main,
-        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-            color: theme.palette.common.white,
-        },
+            backgroundColor: theme.palette.primary.main,
+            '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+                color: theme.palette.common.white,
+            },
         },
     },
 }))(MenuItem);
@@ -44,6 +44,7 @@ export default function Lobbies() {
     const [lobbies, setLobbies] = useState([]);
     const [lobbiesVersion, setLobbiesVersion] = useState(0);
     const [addLobbyOpen, setAddLobbyOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(0);
 
     function handleAddLobby() {
         setAddLobbyOpen(true);
@@ -64,7 +65,7 @@ export default function Lobbies() {
         });
     }, [setCategories]);
     useEffect(() => {
-        fetch(Config.endpoint('/lobbies/'), {
+        fetch(Config.endpoint(`/lobbies/${selectedCategory !== 0 ? `?category=${selectedCategory.toString()}` : ''}`), {
             method: 'GET'
         }).then(res => res.json())
         .then(res => {
@@ -72,7 +73,7 @@ export default function Lobbies() {
         }).catch(err => {
             if(err) console.log(err);
         });
-    }, [setLobbies, lobbiesVersion]);
+    }, [setLobbies, lobbiesVersion, selectedCategory]);
 
     return (
         <Container maxWidth="lg" style={{marginTop: 50}}>
@@ -85,9 +86,9 @@ export default function Lobbies() {
             <Grid container>
                 <Grid item sm={6} md={4} lg={3} style={{borderRight: '1px solid lightgrey'}}>
                     <MenuList>
-                        <StyledMenuItem><ListItemText primary="All"/></StyledMenuItem>
+                        <StyledMenuItem style={selectedCategory === 0 ? {backgroundColor: '#3f51b5', color: 'white'} : {}}><ListItemText primary="All" onClick={() => setSelectedCategory(0)}/></StyledMenuItem>
                         {categories.map(cat => ((
-                            <StyledMenuItem key={cat.id}><ListItemText primary={cat.name}/></StyledMenuItem>
+                            <StyledMenuItem key={cat.id} style={selectedCategory === cat.id ? {backgroundColor: '#3f51b5', color: 'white'} : {}} onClick={() => setSelectedCategory(cat.id)}><ListItemText primary={cat.name}/></StyledMenuItem>
                         )))}
                     </MenuList>
                 </Grid>
@@ -98,6 +99,11 @@ export default function Lobbies() {
                                 <LobbyPreview {...lobby} picture={`${Config.endpoint(`/lobbies/${lobby.id}/image`)}`}/>
                             </Grid>
                         )))}
+                        {lobbies.length === 0 && (
+                            <div style={{margin: 20}}>
+                                <i>There are no lobbies here. Create one with the "+" button in the upper right corner</i>
+                            </div>
+                        )}
                     </Grid>
                 </Grid>
             </Grid>
