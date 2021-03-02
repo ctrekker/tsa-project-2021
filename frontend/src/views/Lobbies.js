@@ -86,9 +86,13 @@ export default function Lobbies() {
             <Grid container>
                 <Grid item sm={6} md={4} lg={3} style={{borderRight: '1px solid lightgrey'}}>
                     <MenuList>
-                        <StyledMenuItem style={selectedCategory === 0 ? {backgroundColor: '#3f51b5', color: 'white'} : {}}><ListItemText primary="All" onClick={() => setSelectedCategory(0)}/></StyledMenuItem>
+                        <StyledMenuItem style={selectedCategory === 0 ? {backgroundColor: '#3f51b5', color: 'white'} : {}} onClick={() => setSelectedCategory(0)}><ListItemText primary={<>
+                                <FlexCenter><span>All</span><Typography variant="body2" style={{flexGrow: 1,  textAlign: 'right'}}>{categories.map(x => x.lobby_count).reduce((acc, next) => acc + next, 0)}</Typography></FlexCenter>
+                            </>}/></StyledMenuItem>
                         {categories.map(cat => ((
-                            <StyledMenuItem key={cat.id} style={selectedCategory === cat.id ? {backgroundColor: '#3f51b5', color: 'white'} : {}} onClick={() => setSelectedCategory(cat.id)}><ListItemText primary={cat.name}/></StyledMenuItem>
+                            <StyledMenuItem key={cat.id} style={selectedCategory === cat.id ? {backgroundColor: '#3f51b5', color: 'white'} : {}} onClick={() => setSelectedCategory(cat.id)}><ListItemText primary={<>
+                                <FlexCenter><span>{cat.name}</span><Typography variant="body2" style={{flexGrow: 1,  textAlign: 'right'}}>{cat.lobby_count}</Typography></FlexCenter>
+                            </>}/></StyledMenuItem>
                         )))}
                     </MenuList>
                 </Grid>

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {AppBar, Button, Toolbar, Typography, InputBase, SvgIcon} from "@material-ui/core";
-import {withRouter} from 'react-router-dom';
+import {withRouter, Link} from 'react-router-dom';
 import {Search, AccountCircle}from '@material-ui/icons';
 import Config from "../Config"
 import FlexCenter from "./FlexCenter";
@@ -25,10 +25,12 @@ return (
     <div style = {{position: 'sticky', zIndex: 6}}>
       <AppBar>
         <Toolbar>
-          <FlexCenter>
-            <img src={logo} style={{width: 20, height: 20, marginRight: 10}} draggable="false"/>
-            <Typography variant="h6" noWrap>eLearn</Typography>
-          </FlexCenter>
+          <Link to="/home" style={{color: 'white', textDecoration: 'none'}}>
+            <FlexCenter>
+              <img src={logo} style={{width: 20, height: 20, marginRight: 10}} draggable="false"/>
+              <Typography variant="h6" noWrap>eLearn</Typography>
+            </FlexCenter>
+          </Link>
           <div>
             <Button onClick={() => history.push("/home")} variant="contained" color='primary' size='large' style = {{top: 0, minHeight: 62, position: "fixed", left: "14%", boxShadow: "none"}}>Home</Button>
           </div>
