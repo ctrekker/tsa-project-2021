@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
 
                 const betterPayload = {
                     ...payload,
-                    id: insertedId
+                    id: results.insertId
                 };
                 const authToken = issue(betterPayload);
                 res.cookie('auth', authToken, {});
