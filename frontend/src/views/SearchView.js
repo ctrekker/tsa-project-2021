@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Typography, Divider} from '@material-ui/core';
 import {useParams} from 'react-router-dom';
+import Config from "../Config"
 
 export default function SearchView() {
     const {q} = useParams();
