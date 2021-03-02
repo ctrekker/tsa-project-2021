@@ -50,8 +50,8 @@ module.exports = {
                                 await queryPromise(conn, sql);
                             }
                             catch(e) {
-                                console.error(e);
-                                console.error(`Error in query: \n${sql}`);
+                                // console.error(e);
+                                // console.error(`Error in query: \n${sql}`);
                                 break;
                             }
                         }
