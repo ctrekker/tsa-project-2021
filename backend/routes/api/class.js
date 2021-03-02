@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
         JOIN USER AS U ON C.INSTRUCTOR = U.ID 
         JOIN LOBBY AS L ON C.LOBBY = L.ID
         JOIN LOBBY_CATEGORY AS LC ON LC.ID = L.CATEGORY
-        WHERE M.MEMBER = ?
+        WHERE M.MEMBER = ? AND C.SCHEDULED_FOR > NOW()
         `;
 
         const classes = await req.conn.queryAsync(sql, [userId]);

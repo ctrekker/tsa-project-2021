@@ -4,6 +4,7 @@ import ClassPreviewList from "../components/ClassPreviewList";
 import LobbyPreviewList from "../components/LobbyPreviewList";
 import moment from "moment";
 import {ArrowRight, ArrowLeft} from "@material-ui/icons";
+import {Link} from 'react-router-dom';
 import Config from "../Config"
 import "./Home.css"
 
@@ -79,6 +80,7 @@ export default function Home(){
     const [lobbyPreviewListStyle, setLobbyPreviewListStyle] = useState(false);
     const [showClasses, setShowClasses] = useState(true);
     const [showButton, setShowButton] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const maxHeight  = "85vh";
     const buttonStyle = {position: "fixed", right: "-4", top: "40vh", fontSize: "6em", backgroundColor: "none", zIndex: 1}
     let closedAt = 0;
@@ -120,11 +122,21 @@ export default function Home(){
         }
     }, [showClasses, setShowClasses]);
 
+    const selectedLobbies = lobbies.filter(s => s.name.substring(0, searchQuery.length).toLowerCase() === searchQuery)
+    const selectedLobbyIds = selectedLobbies.map(x => x.id);
+    const selectedClasses = classPreviews.filter(s => selectedLobbyIds.includes(s.lobby_id));
+    for(let selectedClass of selectedClasses) {
+        selectedClass.scheduledFor = moment(selectedClass.scheduled_for);
+    }
+
     return (
         <div>
             <div id = "scale" className = {showClasses ? "small" : "big"} style = {lobbyPreviewListStyle ? {overflowX: "hidden", overflowY: "hidden", maxWidth: 96 / scaler + "vw"} : {maxWidth: 96 / scaler + "vw"}}>
-                <TextField label="Search Everything" style={{minWidth: "40%", marginLeft: "30%", textAlign: "center", marginTop: "8%"}}/>
-                <LobbyPreviewList lobbies={lobbies} scaler={scaler}/>
+                <TextField label="Search joined lobbies" onChange={(e) => setSearchQuery(e.target.value.toLowerCase())} style={{minWidth: "40%", marginLeft: "30%", textAlign: "center", marginTop: "8%"}}/>
+                <LobbyPreviewList lobbies={selectedLobbies} scaler={scaler}/>
+                {selectedLobbies.length === 0 && (
+                    <i style={{marginLeft: 45}}>That query returned no results. <Link to={`/search/${encodeURIComponent(searchQuery)}`}>Search all lobbies instead</Link></i>
+                )}
             </div>
                 <Grid id = "sidebar" className = {showClasses ? 'slideIn' : 'slideOut'} container xs="4" style={{borderLeft: '1px solid lightgrey', position: "fixed", top: "10%", right: 0, minHeight: "100%", zIndex:2}}>
                     <div style={{display:"flex", flexDirection:"column", padding: 15, position: "sticky", overflowX: "hidden"}}>
@@ -133,7 +145,7 @@ export default function Home(){
                             <Typography variant="h4" style={{marginTop:7}}>Upcoming Classes</Typography>
                         </div>
                         <Divider/>
-                        <ClassPreviewList classPreviews={classPreviews} maxHeight = {maxHeight}/>
+                        <ClassPreviewList classPreviews={selectedClasses} maxHeight = {maxHeight}/>
                     </div>
                 </Grid>
             <IconButton id = "sidebar" className = {showButton ? "slideIn" : "slideOut"} component = {ArrowLeft} onClick={() => expand()} style={showButton ? buttonStyle : buttonStyle}/>
