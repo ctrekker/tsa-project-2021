@@ -46,7 +46,6 @@ router.post('/', async (req, res) => {
             req.conn.query(sql, [payload.sub, payload.name, payload.email, payload.picture], (err, results) => {
                 if(err) console.log(err);
 
-                insertId
                 const betterPayload = {
                     ...payload,
                     id: insertedId
