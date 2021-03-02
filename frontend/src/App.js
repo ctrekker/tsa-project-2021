@@ -15,6 +15,7 @@ import Home from './views/Home';
 import ClassView from "./views/ClassView";
 import Navbar from './components/Navbar';
 import Profile from './views/Profile';
+import SearchView from './views/SearchView';
 
 function App() {
   function onSignIn(googleUser) {
@@ -64,6 +65,9 @@ function App() {
             </Route>
             <Route path="/user/:userId">
               <Profile/>
+            </Route>
+            <Route path="/search/:q">
+              <SearchView/>
             </Route>
           </Switch>
         </div>
