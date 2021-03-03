@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import {Button, Card, CardContent, CardActions, SvgIcon, Grid, Typography} from "@material-ui/core";
 import {School, LibraryBooks, Person} from "@material-ui/icons";
 import './Landing.css';
+import Config from '../Config';
 
 function Landing({ history }) {
   const [showLobbies, setShowLobbies] = useState(false)
@@ -37,8 +38,40 @@ const [showClasses, setShowClasses] = useState(false)
     }
 }, [showClasses, setShowClasses]);
   
-function handleSignIn(){
-  
+  useEffect(() => {
+    setTimeout(() => {
+      /*global gapi*/
+      /*eslint no-undef: "error"*/
+      const GoogleAuth = gapi.auth2.getAuthInstance();
+      const user = GoogleAuth.currentUser.get();
+      const profile = user.getBasicProfile();
+      if(profile) {
+        history.push('/home');
+      }
+    }, 3000);
+  });
+  window.onSignIn = (googleUser) => {
+    console.log('sign in');
+    const token = googleUser.getAuthResponse().id_token;
+    // var profile = googleUser.getBasicProfile();
+    // console.log('ID: ' + profile.getId());
+    // console.log('Name: ' + profile.getName());
+    // console.log('Image URL: ' + profile.getImageUrl());
+    // console.log('Email: ' + profile.getEmail());
+    fetch(Config.endpoint('/users'), {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({ token })
+    }).then(() => {
+      history.push('/home');
+    });
+  };
+
+  function handleSignIn(){
+    history.push('/home');
   }
 
   return (
@@ -186,9 +219,10 @@ function handleSignIn(){
         </div>
       </div>
       <div className = "content">
-        <div style = {{minHeight: "65vh", paddingTop: "30vh"}}>
+        <div style = {{minHeight: "65vh", paddingTop: "30vh", textAlign: 'center'}}>
           <Typography variant = {"h1"} style = {{fontFamily: "Fantasy"}}>eLearn</Typography>
           <Button onClick = {handleSignIn} variant="contained" size = "large" color = "primary" style ={{marginTop: "10%", minWidth: "30%", minHeight: "20%", fontSize: "2em"}}>Join Now!</Button>
+          <div className="g-signin2" data-onsuccess="onSignIn"></div>
         </div>
       </div>
     </div>

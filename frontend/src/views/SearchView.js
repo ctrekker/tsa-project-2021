@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {Container, Typography, Divider} from '@material-ui/core';
 import {useParams} from 'react-router-dom';
-import Config from "../Config"
+import Config from "../Config";
+import LobbyPreview from '../components/LobbyPreview';
 
 export default function SearchView() {
     const {q} = useParams();
@@ -25,7 +26,34 @@ export default function SearchView() {
             <Typography variant="h5">{ decodeURIComponent(q) }</Typography>
             <Divider/>
             <div>
-                
+                {results.lobbies && results.lobbies.length > 0 && (
+                    <div>
+                        <Typography variant="h6">Lobbies</Typography>
+                        {results.lobbies.map(lobby => (
+                            <LobbyPreview {...lobby}/>
+                        ))}
+                    </div>
+                )}
+                {results.classes && results.classes.length > 0 && (
+                    <div>
+                        <Typography variant="h6">Classes</Typography>
+                    </div>
+                )}
+                {results.posts && results.posts.length > 0 && (
+                    <div>
+                        <Typography variant="h6">Posts</Typography>
+                    </div>
+                )}
+                {results.comments && results.comments.length > 0 && (
+                    <div>
+                        <Typography variant="h6">Comments</Typography>
+                    </div>
+                )}
+                {results.users && results.users.length > 0 && (
+                    <div>
+                        <Typography variant="h6">Users</Typography>
+                    </div>
+                )}
             </div>
         </Container>
     );
